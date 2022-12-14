@@ -26,6 +26,11 @@ The sequence diagram below demonstrate the requests
 
 # 0.4: New note in Single page app diagram
 
-### The browser will only send one POST HTTP request to the server and the response will be 201 with message {"message":"note created"}, check the diagram below:
+### The browser will only send one POST HTTP request to the server and the response will be 201 with message {"message":"note created"}.
+The sequence diagram below demonstrate the request:
+
+
+   ![Post_request (2)](https://user-images.githubusercontent.com/32091211/207720262-8289c2db-5e88-4ed8-a52c-4a38363ed6cd.png)
+
 
 
