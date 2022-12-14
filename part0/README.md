@@ -19,3 +19,5 @@ HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
 The sequence diagram below demonstrate the requests
 
 
+
+   ![Post_request (1)](https://user-images.githubusercontent.com/32091211/207472902-917b9e96-0ddb-4793-8130-d24b33307bd3.png)
