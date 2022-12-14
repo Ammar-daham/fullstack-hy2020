@@ -43,6 +43,10 @@ HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
 The sequence diagram below demonstrate the requests:
 
 
+   ![Post_request (3)](https://user-images.githubusercontent.com/32091211/207722291-22be1ed2-faf2-4b4e-9853-7bdff4da4649.png)
+
+   
+
 ____
 
 # 0.6: New note in Single page app diagram
