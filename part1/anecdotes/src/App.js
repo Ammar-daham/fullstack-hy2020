@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import Button from './components/Button'
+import HightestVote from './components/HighestVote'
+import NumOfVotes from './components/NumOfVotes'
 
 const App = () => {
   const anecdotes = [
@@ -30,12 +32,15 @@ const App = () => {
     setVote(copy)
   }
 
+  
+
   return (
     <div>
       {anecdotes[selected]}
-      <p>has {vote[selected]} votes</p>
+      <NumOfVotes numOfVotes={vote[selected]}/>
       <Button handleClick={handleVote} text="vote" />
       <Button handleClick={clickHandle} text="next anecdote" />
+      <HightestVote votes={vote} anecdotes={anecdotes}/>
     </div>
   )
 }
