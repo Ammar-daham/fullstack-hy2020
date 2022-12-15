@@ -15,8 +15,8 @@ const Statistics = ({good, neutral, bad}) => {
             <StatisticLine text="Bad" value={bad}></StatisticLine>
             <StatisticLine text="All" value={sum}></StatisticLine>
             <StatisticLine text="Average" value={sum/3}></StatisticLine>
-            <StatisticLine text="Positive" value={good/sum*100}></StatisticLine>
-            <StatisticLine text="Negative" value={bad/sum*100}></StatisticLine>
+            <StatisticLine text="Positive" value={good/sum*100} percentage={'%'}></StatisticLine>
+            <StatisticLine text="Negative" value={bad/sum*100} percentage={'%'}></StatisticLine>
         </div>
 
     )
