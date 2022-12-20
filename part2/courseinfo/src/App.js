@@ -2,11 +2,6 @@ import React from "react"
 import Course from "./component/Course"
 
 
-const Total = ({ sum }) => <p>Number of exercises {sum}</p>
-
-
-
-
 
 const App = () => {
   const course = {
@@ -30,7 +25,7 @@ const App = () => {
       },
       {
         name: 'Learn React js',
-        exercises: 15,
+        exercises: 11,
         id: 4
       },
     ]
