@@ -1,4 +1,8 @@
 import { useState } from 'react'
+import Filter from './component/Filter'
+import PersonForm from './component/PersonForm'
+import Persons from './component/Persons'
+import Person from './component/Person'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -12,9 +16,9 @@ const App = () => {
 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [search, setSearch] = useState([])
+  const [filteredPerson, setFilteredPerson] = useState([])
 
-  console.log('search: ', search)
+  console.log('Filtered Person: ', setFilteredPerson)
   console.log('newName: ', newName)
 
   const addPerson = (event) => {
@@ -51,48 +55,34 @@ const App = () => {
       ? console.log(`${event.target.value} found`)
       : console.log(`${event.target.value} not found`)
 
-    setSearch(found)
-    console.log('Found: ', search)
+    setFilteredPerson(found)
+    console.log('Found: ', filteredPerson)
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with{' '}
-        <input value={persons.name} onChange={handleSearchInputChange} />
-      </div>
-      <h2>Add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNameInputChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberInputChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <div>
-        {persons.map((person) => (
-          <p key={person.name}>
-            {person.name} {person.number}
-          </p>
-        ))}
-      </div>
-      <div>
-        <h2>Filtered person</h2>
-        {
-          search 
-          ?
-            <p key={search.name}>
-              {search.name} {search.number}
-            </p>
-          : <p>not found</p>
-        }
-      </div>
+
+      <Filter name={persons.name} handleChange={handleSearchInputChange} />
+
+      <h3>Add a new</h3>
+
+      <PersonForm
+        handleSubmit={addPerson}
+        name={newName}
+        number={newNumber}
+        handleNameChange={handleNameInputChange}
+        handleNumberChange={handleNumberInputChange}
+      />
+
+      <h3>Numbers</h3>
+      
+      <Persons persons={persons}/>
+
+      <h3>Filtered person</h3>
+      
+      <Person filtered={filteredPerson}/>
+
     </div>
   )
 }
