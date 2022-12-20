@@ -4,8 +4,11 @@ const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas' }
   ]) 
+
   console.log(persons)
+
   const [newName, setNewName] = useState('')
+
   console.log("newName: ",newName)
 
 
@@ -15,7 +18,10 @@ const App = () => {
     const personObj = {
       name: newName
     }
-    setPersons(persons.concat(personObj))
+    persons.filter( person => person.name === personObj.name
+    ? setPersons([...persons]) 
+    + alert(`${personObj.name} is already added to phonebook`)
+    : setPersons(persons.concat(personObj)))
   }
 
   const handleInputChange = (event) => {
