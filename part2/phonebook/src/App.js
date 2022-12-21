@@ -1,16 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import Filter from './component/Filter'
 import PersonForm from './component/PersonForm'
 import Persons from './component/Persons'
 import Person from './component/Person'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 },
-  ])
+
+  const [persons, setPersons] = useState([])
+
+  useEffect(() => {
+    console.log("effect")
+    axios.get('http://localhost:3001/persons')
+    .then(response => {
+      console.log('Promise fulfilled')
+      setPersons(response.data)
+    })
+  }, [])
 
   console.log(persons)
 
@@ -18,7 +24,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filteredPerson, setFilteredPerson] = useState([])
 
-  console.log('Filtered Person: ', setFilteredPerson)
+  console.log('Filtered Person: ', filteredPerson)
   console.log('newName: ', newName)
 
   const addPerson = (event) => {
@@ -56,7 +62,7 @@ const App = () => {
       : console.log(`${event.target.value} not found`)
 
     setFilteredPerson(found)
-    console.log('Found: ', filteredPerson)
+    console.log('Found: ', found)
   }
 
   return (
@@ -76,13 +82,12 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      
-      <Persons persons={persons}/>
+
+      <Persons persons={persons} />
 
       <h3>Filtered person</h3>
-      
-      <Person filtered={filteredPerson}/>
 
+      <Person filtered={filteredPerson} />
     </div>
   )
 }
