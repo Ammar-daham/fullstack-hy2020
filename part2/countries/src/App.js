@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import CountryDetails from './component/CountryDetails'
+import UserInput from './component/UserInput'
+import Forecast from './component/CountryForecast'
 
 const App = () => {
   const [countries, setCountries] = useState([])
 
   const [filteredCountries, setFilteredCountries] = useState([])
 
+  const [forecast, setForecast] = useState([])
+
+  const apiId = process.env.REACT_APP_API_KEY
 
   countries.map((country) => console.log('country ', country.name.common))
 
   console.log('Filtered Countries ', filteredCountries)
+
+  console.log('Forecast ', forecast)
 
 
   useEffect(() => {
@@ -19,10 +26,18 @@ const App = () => {
       console.log(response.data)
       setCountries(response.data)
     })
-  }, [])
+    if(filteredCountries.length === 1) {
+      axios
+      .get(`https://api.openweathermap.org/data/2.5/weather?q=${filteredCountries[0].capital}&appid=${apiId}&units=metric`)
+      .then((response) => {
+        console.log("forecast: ", response.data)
+        setForecast([response.data])
+      })
+    }
+  }, [filteredCountries, apiId])
 
   const handleChange = (event) => {
-    console.log('Value: ', event.target.value)
+    
     const foundCountries = countries.filter((country) => {
       if (
         country.name.common
@@ -30,24 +45,17 @@ const App = () => {
           .startsWith(event.target.value.toLowerCase())
       ) {
         return country
-      }
+      } 
       return false
+      
     })
+    
     setFilteredCountries(foundCountries)
   }
 
-  // const handleShowClick = (event) => {
-  //   event.preventDefault()
-  //   setShowDetails(true)
-  //   console.log(country)
-  // }
-
   return (
     <div>
-      <div>
-        Find countries:
-        <input onChange={handleChange} />
-      </div>
+      <UserInput handleChange={handleChange}/>
 
       <div>
         {
@@ -59,7 +67,12 @@ const App = () => {
             <button onClick={() => setFilteredCountries([country])}>show</button></p>
         )) 
         : filteredCountries.length === 1
-        ? <CountryDetails key={filteredCountries[0].name.common} country={filteredCountries[0]}/>
+        ? (
+          <div>
+            <CountryDetails key={filteredCountries[0].name.common} country={filteredCountries[0]}/>
+            <Forecast forecast={forecast}/>
+          </div>
+        )
         : false
         }
       </div>
