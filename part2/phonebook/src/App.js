@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Filter from './component/Filter'
 import PersonForm from './component/PersonForm'
 import Persons from './component/Persons'
@@ -12,13 +11,12 @@ const App = () => {
 
 
   useEffect(() => {
-    console.log("effect")
     personService.getAll()
     .then(initialState => {
       console.log('Promise fulfilled')
       setPersons(initialState)
     })
-  }, [])
+  }, [persons])
 
   console.log("persons: ", persons)
 
@@ -34,7 +32,7 @@ const App = () => {
     let personObj = {}
     persons.map((person) => {
       if(person.name === newName) { 
-        alert(`${newName} is already added to phonebook`)
+        alert(`${newName} is already added to phoneBook`)
         setPersons([...person])
       } else {
         personObj = {
@@ -77,7 +75,7 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h2>PhoneBook</h2>
 
       <Filter name={persons.name} handleChange={handleSearchInputChange} />
 
@@ -93,7 +91,17 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons persons={persons} />
+    {
+      persons.map(person => (
+        <Persons key={person.id} person={person} handleDelete={() => {
+          window.confirm(`Delete ${person.name}`)
+          ?
+            personService.deletePerson(person.id)
+            .then( () => console.log(`Deleted person: ${person.name}`))
+          :console.log('not deleted')
+        }} />
+        )) 
+    }
 
       <h3>Filtered person</h3>
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = 'http://localhost:3001/persons'
+const baseUrl = 'http://localhost:3001/persons/'
 
 const getAll = () => {
     const request = axios.get(baseUrl)
@@ -12,7 +12,13 @@ const create = newPerson => {
     return request.then(response => response.data)
 }
 
+const deletePerson = (id) => {
+    const request = axios.delete(baseUrl+id)
+    return request.then(() => console.log("Delete successful"))
+}
+
 export default {
     getAll,
-    create
+    create,
+    deletePerson
 }

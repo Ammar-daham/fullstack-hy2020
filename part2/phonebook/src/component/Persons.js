@@ -1,10 +1,11 @@
-const Persons = ({ persons }) => (
+import personServices from '../services/person'
+
+const Persons = ({ person, handleDelete }) => (
   <div>
-    {persons.map((person) => (
-      <p key={person.name}>
-        {person.name} {person.number}
-      </p>
-    ))}
+        <p>
+          {person.name} {person.number}
+          <button onClick={handleDelete}>delete</button>
+        </p>   
   </div>
 )
 
