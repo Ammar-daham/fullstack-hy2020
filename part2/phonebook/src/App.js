@@ -9,16 +9,18 @@ const App = () => {
 
   const [persons, setPersons] = useState([])
 
+  const baseUrl = 'http://localhost:3001/persons'
+
   useEffect(() => {
     console.log("effect")
-    axios.get('http://localhost:3001/persons')
+    axios.get(baseUrl)
     .then(response => {
       console.log('Promise fulfilled')
       setPersons(response.data)
     })
   }, [])
 
-  console.log(persons)
+  console.log("persons: ", persons)
 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
@@ -29,17 +31,25 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    console.log('Name added: ', persons)
-    const personObj = {
-      name: newName,
-      number: newNumber,
-    }
-    persons.filter((person) =>
-      person.name === personObj.name
-        ? setPersons([...persons]) +
-          alert(`${personObj.name} is already added to phonebook`)
-        : setPersons(persons.concat(personObj)),
-    )
+    let personObj = {}
+    persons.map((person) => {
+      if(person.name === newName) { 
+        alert(`${newName} is already added to phonebook`)
+        setPersons([...person])
+      } else {
+        personObj = {
+          name: newName,
+          number: newNumber,
+        }
+      }
+    })
+    axios.post(baseUrl, personObj)
+    .then(response => {
+      setPersons(persons.concat(response.data))
+      setNewName('')
+      setNewNumber('')
+      console.log("response: ", response.data)
+    })
   }
 
   const handleNameInputChange = (event) => {
