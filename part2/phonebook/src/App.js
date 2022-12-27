@@ -4,19 +4,19 @@ import Filter from './component/Filter'
 import PersonForm from './component/PersonForm'
 import Persons from './component/Persons'
 import Person from './component/Person'
+import personService from './services/person'
 
 const App = () => {
 
   const [persons, setPersons] = useState([])
 
-  const baseUrl = 'http://localhost:3001/persons'
 
   useEffect(() => {
     console.log("effect")
-    axios.get(baseUrl)
-    .then(response => {
+    personService.getAll()
+    .then(initialState => {
       console.log('Promise fulfilled')
-      setPersons(response.data)
+      setPersons(initialState)
     })
   }, [])
 
@@ -43,12 +43,12 @@ const App = () => {
         }
       }
     })
-    axios.post(baseUrl, personObj)
-    .then(response => {
-      setPersons(persons.concat(response.data))
+    personService.create(personObj)
+    .then(returnedPerson => {
+      setPersons(persons.concat(returnedPerson))
       setNewName('')
       setNewNumber('')
-      console.log("response: ", response.data)
+      console.log("response: ", returnedPerson)
     })
   }
 
