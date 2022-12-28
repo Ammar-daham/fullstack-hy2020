@@ -16,7 +16,7 @@ const App = () => {
       console.log('Promise fulfilled')
       setPersons(initialState)
     })
-  }, [persons])
+  }, [])
 
   console.log("persons: ", persons)
 
@@ -26,39 +26,51 @@ const App = () => {
 
   console.log('Filtered Person: ', filteredPerson)
   console.log('newName: ', newName)
+  console.log('newNumber: ', newNumber)
 
-  const addPerson = (event) => {
+  const addPerson = ( event )  => {
     event.preventDefault()
-    let personObj = {}
-    persons.map((person) => {
-      if(person.name === newName) { 
-        alert(`${newName} is already added to phoneBook`)
-        setPersons([...person])
-      } else {
-        personObj = {
-          name: newName,
-          number: newNumber,
-        }
+    let personObj = persons.find(p => p.name === newName)
+    if(personObj) {
+      personObj = {...personObj, number: newNumber}
+      console.log("personU: ", personObj )
+      window.confirm(`${newName} is already added to phoneBook, replace the old number with a new one?`)
+      ? (
+        personService.update
+        (personObj.id , personObj)
+        .then(updatedPerson => {
+          setPersons(persons.map( 
+            person => person.name !== personObj.name ? person : updatedPerson))
+          setNewName('')
+          setNewNumber('')
+          console.log('updated person: ', updatedPerson)
+        })
+      )
+      : console.log('Old number not updated')
+    } else {
+      personObj = {
+        name: newName,
+        number: newNumber,
       }
-    })
-    personService.create(personObj)
-    .then(returnedPerson => {
-      setPersons(persons.concat(returnedPerson))
-      setNewName('')
-      setNewNumber('')
-      console.log("response: ", returnedPerson)
-    })
+      personService.create(personObj)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
+        console.log("response: ", returnedPerson)
+      })
+    }
+    
+
+    
   }
 
-  const handleNameInputChange = (event) => {
+  const handleNameInputChange = event => 
     setNewName(event.target.value)
-    console.log('new name: ', event.target.value)
-  }
 
-  const handleNumberInputChange = (event) => {
+  const handleNumberInputChange = event => 
     setNewNumber(event.target.value)
-    console.log('new number: ', event.target.value)
-  }
+    
 
   const handleSearchInputChange = (event) => {
     const found = persons.find(
@@ -97,7 +109,13 @@ const App = () => {
           window.confirm(`Delete ${person.name}`)
           ?
             personService.deletePerson(person.id)
-            .then( () => console.log(`Deleted person: ${person.name}`))
+            .then( () => 
+              personService.getAll()
+              .then(initialState => {
+                console.log('Promise fulfilled')
+                setPersons(initialState)
+              })
+            )
           :console.log('not deleted')
         }} />
         )) 

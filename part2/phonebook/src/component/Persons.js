@@ -1,4 +1,3 @@
-import personServices from '../services/person'
 
 const Persons = ({ person, handleDelete }) => (
   <div>
