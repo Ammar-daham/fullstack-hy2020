@@ -16,7 +16,6 @@ const App = () => {
 
   useEffect(() => {
     personService.getAll().then((initialState) => {
-      console.log('Promise fulfilled')
       setPersons(initialState)
     })
   }, [])
