@@ -59,6 +59,10 @@ const App = () => {
           setSuccessMessage(`Added ${returnedPerson.name}`)
           setTime(setSuccessMessage)
         })
+        .catch(error => {
+          console.log('error: ', error.response.data.error)
+          setErrorMessage(error.response.data.error)
+        })
     }
   }
 
