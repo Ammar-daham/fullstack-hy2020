@@ -1,3 +1,6 @@
+import React from "react"
+
+/* eslint-disable */
 const Person = ({ filtered }) => (
   <div>
     {filtered ? (
@@ -9,5 +12,6 @@ const Person = ({ filtered }) => (
     )}
   </div>
 )
+
 
 export default Person

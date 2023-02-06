@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react'
 import Filter from './component/Filter'
 import PersonForm from './component/PersonForm'
@@ -29,27 +30,27 @@ const App = () => {
         `${newName} is already added to phoneBook, replace the old number with a new one?`,
       )
         ? personService
-            .update(personObj.id, personObj)
-            .then((updatedPerson) => {
-              setPersons(
-                persons.map((person) =>
-                  person.name !== personObj.name ? person : updatedPerson,
-                ),
-              )
-              setNewName('')
-              setNewNumber('')
-              setSuccessMessage(`${updatedPerson.name}'s number changed`)
-              setTime(setSuccessMessage)
-            })
-            // .then( () => {
-            //   setErrorMessage(`Information of ${personObj.name} has already been removed from server `)
-            //   setTime(setErrorMessage)
-            // })
-            .catch(error => {
-              console.log('error: ', error.response.data.error)
-              setErrorMessage(error.response.data.error)
-              setTime(setErrorMessage)
-            })
+          .update(personObj.id, personObj)
+          .then((updatedPerson) => {
+            setPersons(
+              persons.map((person) =>
+                person.name !== personObj.name ? person : updatedPerson,
+              ),
+            )
+            setNewName('')
+            setNewNumber('')
+            setSuccessMessage(`${updatedPerson.name}'s number changed`)
+            setTime(setSuccessMessage)
+          })
+          // .then( () => {
+          //   setErrorMessage(`Information of ${personObj.name} has already been removed from server `)
+          //   setTime(setErrorMessage)
+          // })
+          .catch((error) => {
+            console.log('error: ', error.response.data.error)
+            setErrorMessage(error.response.data.error)
+            setTime(setErrorMessage)
+          })
         : console.log('Old number not updated')
     } else {
       personObj = {
@@ -65,7 +66,7 @@ const App = () => {
           setSuccessMessage(`Added ${returnedPerson.name}`)
           setTime(setSuccessMessage)
         })
-        .catch(error => {
+        .catch((error) => {
           console.log('error: ', error.response.data.error)
           setErrorMessage(error.response.data.error)
           setTime(setErrorMessage)
@@ -95,7 +96,10 @@ const App = () => {
     <div>
       <h2>PhoneBook</h2>
 
-      <Notification successMessage={successMessage} errorMessage={errorMessage} />
+      <Notification
+        successMessage={successMessage}
+        errorMessage={errorMessage}
+      />
 
       <Filter name={persons.name} handleChange={handleSearchInputChange} />
 
@@ -117,15 +121,20 @@ const App = () => {
           person={person}
           handleDelete={() => {
             window.confirm(`Delete ${person.name}`)
-              ? personService.deletePerson(person.id).then(() => {
+              ? personService
+                .deletePerson(person.id)
+                .then(() => {
                   setSuccessMessage(`Deleted ${person.name}`)
                   setTime(setSuccessMessage)
                   personService.getAll().then((initialState) => {
                     console.log('Promise fulfilled')
                     setPersons(initialState)
                   })
-                }).catch( () => {
-                  setErrorMessage(`${person.name} has already been removed from the server`)
+                })
+                .catch(() => {
+                  setErrorMessage(
+                    `${person.name} has already been removed from the server`,
+                  )
                   setTime(setErrorMessage)
                 })
               : console.log('not deleted')
