@@ -126,6 +126,22 @@ app.post('/api/persons', (req, res) => {
     //persons = persons.concat(person)   
 })
 
+
+app.put('/api/persons/:id', (req, res, next) => {
+  const body = req.body
+
+  const person = {
+    name: body.name,
+    number: body.number
+  }
+
+  Person.findByIdAndUpdate(req.params.id, person, { new: true})
+    .then(updatedPerson => {
+      res.json(updatedPerson)
+    })
+    .catch(error => next(error))
+})
+
 // The error handler middleware has to be the last loaded middleware
 app.use(errorHandler);
 
