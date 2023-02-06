@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const app = express()
 const cors = require('cors')
 const Person = require('./models/person')
+const errorHandler = require('./middlewares/apiErrorHandler')
 
 app.use(express.json())
 app.use(cors())
@@ -41,7 +42,6 @@ app.use(morgan(':date[iso] :method :url :http-version :user-agent :status (:resp
 let people = []
 
 const date = new Date()
-
 
 
 
@@ -125,6 +125,10 @@ app.post('/api/persons', (req, res) => {
     })
     //persons = persons.concat(person)   
 })
+
+// The error handler middleware has to be the last loaded middleware
+app.use(errorHandler);
+
 
 const PORT = process.env.PORT
 app.listen(PORT)
