@@ -40,8 +40,14 @@ const App = () => {
               setNewNumber('')
               setSuccessMessage(`${updatedPerson.name}'s number changed`)
               setTime(setSuccessMessage)
-            }).catch( () => {
-              setErrorMessage(`Information of ${personObj.name} has already been removed from server `)
+            })
+            // .then( () => {
+            //   setErrorMessage(`Information of ${personObj.name} has already been removed from server `)
+            //   setTime(setErrorMessage)
+            // })
+            .catch(error => {
+              console.log('error: ', error.response.data.error)
+              setErrorMessage(error.response.data.error)
               setTime(setErrorMessage)
             })
         : console.log('Old number not updated')
