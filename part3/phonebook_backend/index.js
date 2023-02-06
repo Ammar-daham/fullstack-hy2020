@@ -10,11 +10,15 @@ app.use(express.json())
 app.use(cors())
 app.use(express.static('build'))
 
-morgan.token('body', req => {
+morgan.token('body', (req) => {
   return JSON.stringify(req.body)
 })
 
-app.use(morgan(':date[iso] :method :url :http-version :user-agent :status (:response-time ms) :body'))
+app.use(
+  morgan(
+    ':date[iso] :method :url :http-version :user-agent :status (:response-time ms) :body',
+  ),
+)
 
 // let persons = [
 //   {
@@ -41,22 +45,19 @@ app.use(morgan(':date[iso] :method :url :http-version :user-agent :status (:resp
 
 let people = []
 
-const date = new Date()
-
-
-
+//const date = new Date()
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello World</h1>')
 })
 
-app.get('/info', (req, res) => {
-  res.send(`<p>PhoneBook has info for ${persons.length} people</p>
-     <p>${date}</p>`)
-})
+// app.get('/info', (req, res) => {
+//   res.send(`<p>PhoneBook has info for ${persons.length} people</p>
+//      <p>${date}</p>`)
+// })
 
 app.get('/api/persons', (req, res) => {
-  Person.find({}).then(persons => {
+  Person.find({}).then((persons) => {
     res.json(persons)
     people.concat(persons)
   })
@@ -65,29 +66,27 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/api/persons/:id', async (req, res, next) => {
-    await Person.findById(req.params.id)
-    .then(person => {
+  await Person.findById(req.params.id)
+    .then((person) => {
       if (person) {
-          console.log(person)
-          res.json(person)
+        console.log(person)
+        res.json(person)
       } else {
-          res.status(404).end()
+        res.status(404).end()
       }
     })
-    .catch(error => next(error))
+    .catch((error) => next(error))
 })
-
-
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-  .then(result => {
-    res.status(204).end()
-  })
-  .catch(error => next(error))
-    // const id = Number(req.params.id)
-    // persons = persons.filter(person => person.id !== id)
-    // res.status(204).end()
+    .then(() => {
+      res.status(204).end()
+    })
+    .catch((error) => next(error))
+  // const id = Number(req.params.id)
+  // persons = persons.filter(person => person.id !== id)
+  // res.status(204).end()
 })
 
 // const generateId = () => {
@@ -97,56 +96,58 @@ app.delete('/api/persons/:id', (req, res, next) => {
 // }
 
 app.post('/api/persons', (req, res, next) => {
-    const body = req.body
-   
-    if (!body.name || !body.number) {
-        return res.status(400).json({
-          error: 'name or number is missing',
+  const body = req.body
+
+  if (!body.name || !body.number) {
+    return res.status(400).json({
+      error: 'name or number is missing',
+    })
+  }
+
+  people.map((person) => {
+    if (person.name === body.name) {
+      console.log(person.name === body.name)
+      return res
+        .status(400)
+        .json({
+          error: 'name must be unique',
         })
-    } 
-    
-    people.map(person => {
-        if(person.name === body.name) {
-            console.log(person.name === body.name)
-            return res.status(400).json({
-                error: 'name must be unique'
-            }).end()
-        } 
-    })
+        .end()
+    }
+  })
 
-    const person = new Person ({
-      //id: generateId(),
-      name: body.name,
-      number: body.number
-    })
+  const person = new Person({
+    //id: generateId(),
+    name: body.name,
+    number: body.number,
+  })
 
-    person.save().then(person => {
+  person
+    .save()
+    .then((person) => {
       console.log(person)
       res.json(person)
     })
-    .catch( error => next(error))
-    //persons = persons.concat(person)   
+    .catch((error) => next(error))
+  //persons = persons.concat(person)
 })
 
-
 app.put('/api/persons/:id', (req, res, next) => {
-  const body = req.body
+  const { name, number } = req.body
 
-  const person = {
-    name: body.name,
-    number: body.number
-  }
-
-  Person.findByIdAndUpdate(req.params.id, person, { new: true})
-    .then(updatedPerson => {
+  Person.findByIdAndUpdate(
+    req.params.id,
+    { name, number },
+    { new: true, runValidators: true, context: 'query' },
+  )
+    .then((updatedPerson) => {
       res.json(updatedPerson)
     })
-    .catch(error => next(error))
+    .catch((error) => next(error))
 })
 
 // The error handler middleware has to be the last loaded middleware
-app.use(errorHandler);
-
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT)
