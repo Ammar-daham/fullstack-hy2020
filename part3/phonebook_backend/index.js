@@ -64,21 +64,30 @@ app.get('/api/persons', (req, res) => {
   // res.json(persons)
 })
 
-app.get('/api/persons/:id', async (req, res) => {
-    const person = await Person.findById(req.params.id)
-
-    if (person) {
-        console.log(person)
-        res.json(person)
-    } else {
-        res.status(404).send('Person not found')
-    }
+app.get('/api/persons/:id', async (req, res, next) => {
+    await Person.findById(req.params.id)
+    .then(person => {
+      if (person) {
+          console.log(person)
+          res.json(person)
+      } else {
+          res.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    persons = persons.filter(person => person.id !== id)
+
+
+app.delete('/api/persons/:id', (req, res, next) => {
+  Person.findByIdAndRemove(req.params.id)
+  .then(result => {
     res.status(204).end()
+  })
+  .catch(error => next(error))
+    // const id = Number(req.params.id)
+    // persons = persons.filter(person => person.id !== id)
+    // res.status(204).end()
 })
 
 // const generateId = () => {
@@ -112,10 +121,9 @@ app.post('/api/persons', (req, res) => {
 
     person.save().then(person => {
       console.log(person)
+      res.json(person)
     })
-    //persons = persons.concat(person)
-    
-    res.json(person)
+    //persons = persons.concat(person)   
 })
 
 const PORT = process.env.PORT
