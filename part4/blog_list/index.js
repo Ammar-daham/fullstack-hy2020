@@ -1,4 +1,4 @@
-const http = require('http')
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const cors = require('cors')
@@ -16,7 +16,7 @@ const Blog = mongoose.model('Blog', blogSchema)
 mongoose.set('strictQuery', false)
 
 
-const mongoUrl = 'mongodb+srv://fullstack:fullstack@cluster0.suvv0aa.mongodb.net/blog-list'
+const mongoUrl = process.env.MONGODB_URI
 mongoose.connect(mongoUrl)
 
 app.use(cors())
