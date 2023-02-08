@@ -41,8 +41,12 @@ test('there are two blogs', async () => {
 
 test('the first blog is about learing React js', async () => {
     const response = await api.get('/api/blogs')
-    
     expect(response.body[0].title).toBe('Learning React')
+})
+
+test('unique identifier property of blog post verified', async () => {
+    const response = await api.get('/api/blogs')
+    expect(response.body[0].id).toBeDefined()
 })
 
 afterAll(async () => {
