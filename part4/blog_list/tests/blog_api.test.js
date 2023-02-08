@@ -63,10 +63,32 @@ test('a valid blog can be added', async () => {
     .expect('Content-Type', /application\/json/)
 
   const response = await api.get('/api/blogs')
-  const titles = response.body.map(r => r.title)
+  const titles = response.body.map((r) => r.title)
 
   expect(response.body).toHaveLength(initialBlogs.length + 1)
   expect(titles).toContain('Learning Jest test')
+})
+
+test('likes property sets to 0 by default', async () => {
+  const newBlog = {
+    title: 'Learning express js',
+    author: 'Ammar Daham',
+    url: 'http://ammardaham.com',
+  }
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  expect(response.body.likes).toBe(0)
+})
+
+test('blog without title or url is not added', async () => {
+  const newBlog = {
+    author: 'Ammar Daham',
+  }
+  await api.post('/api/blogs').send(newBlog).expect(400)
 })
 
 afterAll(async () => {
