@@ -4,8 +4,8 @@ require('express-async-errors')
 
 
 blogRouter.get('/', async (request, response) => {
-  const blog = await Blog.find({})
-  response.status(200).json(blog)
+  const blogs = await Blog.find({})
+  response.status(200).json(blogs)
 })
 
 blogRouter.post('/', async (request, response) => {
