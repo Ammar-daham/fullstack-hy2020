@@ -6,6 +6,8 @@ const blogRouter = require('./controllers/blogs')
 const middleware = require('./utils/middleware')
 const config = require('./utils/config')
 const logger = require('./utils/logger')
+var morgan = require('morgan')
+
 
 mongoose.set('strictQuery', false)
 
@@ -23,6 +25,16 @@ mongoose
 app.use(cors())
 app.use(express.static('build'))
 app.use(express.json())
+
+morgan.token('body', (req) => {
+  return JSON.stringify(req.body)
+})
+
+app.use(
+  morgan(
+    ':date[iso] :method :url :http-version :user-agent :status (:response-time ms) :body',
+  ),
+)
 
 app.use(middleware.requestLogger)
 app.use('/api/blogs/', blogRouter)
