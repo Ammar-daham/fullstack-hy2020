@@ -8,6 +8,7 @@ const config = require('./utils/config')
 const logger = require('./utils/logger')
 let morgan = require('morgan')
 const userRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
 
 
 
@@ -39,6 +40,7 @@ app.use(
 )
 
 app.use(middleware.requestLogger)
+app.use('/api/login', loginRouter)
 app.use('/api/users', userRouter)
 app.use('/api/blogs/', blogRouter)
 app.use(middleware.unknownEndpoint)
