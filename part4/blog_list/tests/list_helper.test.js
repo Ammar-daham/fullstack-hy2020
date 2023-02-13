@@ -103,7 +103,7 @@ describe('most likes', () => {
   })
 })
 
-describe('most blogs', () => {
+describe('most blogs and likes', () => {
   test('author with most blogs', async () => {
     const autherWithMostBlogs = {
       author: 'Robert C. Martin',
@@ -113,4 +113,14 @@ describe('most blogs', () => {
     const result = listHelper.mostBlogs(blogs)
     expect(result).toEqual(autherWithMostBlogs)
   })
+
+  test('author with most likes', async() => {
+    const autherWithMostLikes = {
+      author: 'Edsger W. Dijkstra',
+      likes: 17
+    }
+    const result = listHelper.mostLikes(blogs)
+    expect(result).toEqual(autherWithMostLikes)
+  })
 })
+
