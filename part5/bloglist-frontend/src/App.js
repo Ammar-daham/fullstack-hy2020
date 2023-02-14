@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
+import NewBlog from './components/NewBlog'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -10,6 +11,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState('')
+  const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' });
+
 
   console.log('user: ', user)
 
@@ -19,9 +22,10 @@ const App = () => {
 
   useEffect(() => {
     const LoggedUserJSON = window.localStorage.getItem('loggedUser')
-    if(LoggedUserJSON) {
+    if (LoggedUserJSON) {
       const user = JSON.parse(LoggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -32,14 +36,31 @@ const App = () => {
         username,
         password,
       })
-      window.localStorage.setItem(
-        'loggedUser', JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
       setErrorMessage('Wrong credentials')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const handleCreate = async (event) => {
+    event.preventDefault()
+    try {
+      const createdBlog = await blogService.creatNewBlog({
+        title: newBlog.title,
+        author: newBlog.author,
+        url: newBlog.url,
+      })
+      setNewBlog({ title: '', author: '', url: '' });
+      setBlogs(blogs.concat(createdBlog))
+    } catch (exception) {
+      setErrorMessage('wrong format')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -69,7 +90,14 @@ const App = () => {
       {user && (
         <div>
           <h2>blogs</h2>
-          <p>{user.name} logged in<button onClick={handleLogout}>logout</button></p>
+          <p>
+            {user.name} logged in<button onClick={handleLogout}>logout</button>
+          </p>
+          <NewBlog
+            handleCreate={handleCreate}
+            newBlog={newBlog}
+            setNewBlog={setNewBlog}
+          />
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}
