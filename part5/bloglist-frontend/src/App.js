@@ -63,7 +63,9 @@ const App = () => {
   const addBlog = async (blogObject) => {
     try {
       const createdBlog = await blogService.creatNewBlog(blogObject)
-      setSuccessMessage(`a new blog ${blogObject.title}! by ${blogObject.author} added`)
+      setSuccessMessage(
+        `a new blog ${blogObject.title}! by ${blogObject.author} added`,
+      )
       setTimeout(() => {
         setSuccessMessage(null)
       }, 5000)
@@ -82,7 +84,6 @@ const App = () => {
     console.log('logged out')
   }
 
- 
   return (
     <div>
       {!user && (
@@ -108,14 +109,13 @@ const App = () => {
             errorMessage={errorMessage}
             successMessage={successMessage}
           />
+
           <p>
             {user.name} logged in<button onClick={handleLogout}>logout</button>
           </p>
-         
-          <Togglable buttonLabel='create new blog'>
-            <NewBlogForm
-              createBlog={addBlog}
-            />
+
+          <Togglable buttonLabel="create new blog">
+            <NewBlogForm createBlog={addBlog} />
           </Togglable>
 
           {blogs.map((blog) => (
