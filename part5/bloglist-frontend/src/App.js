@@ -5,6 +5,7 @@ import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -50,6 +51,14 @@ const App = () => {
     }
   }
 
+  const handleUsernameChange = ({ target }) => {
+    setUsername(target.value)
+  }
+
+  const handlePasswordChange = ({ target }) => {
+    setPassword(target.value)
+  }
+
   const handleCreate = async (event) => {
     event.preventDefault()
     try {
@@ -78,6 +87,7 @@ const App = () => {
     console.log('logged out')
   }
 
+ 
   return (
     <div>
       {!user && (
@@ -90,9 +100,9 @@ const App = () => {
           <LoginForm
             handleLogin={handleLogin}
             username={username}
-            setUsername={setUsername}
+            handleUsernameChange={handleUsernameChange}
             password={password}
-            setPassword={setPassword}
+            handlePasswordChange={handlePasswordChange}
           />
         </div>
       )}
@@ -106,11 +116,15 @@ const App = () => {
           <p>
             {user.name} logged in<button onClick={handleLogout}>logout</button>
           </p>
-          <NewBlogForm
-            handleCreate={handleCreate}
-            newBlog={newBlog}
-            setNewBlog={setNewBlog}
-          />
+         
+          <Togglable buttonLabel='create new blog'>
+            <NewBlogForm
+              handleCreate={handleCreate}
+              newBlog={newBlog}
+              setNewBlog={setNewBlog}
+            />
+          </Togglable>
+
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}
