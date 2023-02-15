@@ -3,7 +3,8 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
-import NewBlog from './components/NewBlog'
+import NewBlogForm from './components/NewBlogForm'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,8 +12,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState('')
-  const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' });
-
+  const [successMessage, setSuccessMessage] = useState('')
+  const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' })
 
   console.log('user: ', user)
 
@@ -42,7 +43,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      setErrorMessage('wrong username or password')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -57,10 +58,14 @@ const App = () => {
         author: newBlog.author,
         url: newBlog.url,
       })
-      setNewBlog({ title: '', author: '', url: '' });
+      setSuccessMessage(`a new blog ${newBlog.title}! by ${newBlog.author} added`)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+      setNewBlog({ title: '', author: '', url: '' })
       setBlogs(blogs.concat(createdBlog))
     } catch (exception) {
-      setErrorMessage('wrong format')
+      setErrorMessage(exception.response.data.error)
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -77,7 +82,11 @@ const App = () => {
     <div>
       {!user && (
         <div>
-          <h2>Log in to application</h2>
+          <h2>log in to application</h2>
+          <Notification
+            errorMessage={errorMessage}
+            successMessage={successMessage}
+          />
           <LoginForm
             handleLogin={handleLogin}
             username={username}
@@ -90,10 +99,14 @@ const App = () => {
       {user && (
         <div>
           <h2>blogs</h2>
+          <Notification
+            errorMessage={errorMessage}
+            successMessage={successMessage}
+          />
           <p>
             {user.name} logged in<button onClick={handleLogout}>logout</button>
           </p>
-          <NewBlog
+          <NewBlogForm
             handleCreate={handleCreate}
             newBlog={newBlog}
             setNewBlog={setNewBlog}
