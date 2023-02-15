@@ -62,14 +62,16 @@ const App = () => {
 
   const addBlog = async (blogObject) => {
     try {
-      const createdBlog = await blogService.creatNewBlog(blogObject)
+      await blogService.creatNewBlog(blogObject)
       setSuccessMessage(
         `a new blog ${blogObject.title}! by ${blogObject.author} added`,
       )
+      const updatedBlogs = await blogService.getAll()
       setTimeout(() => {
         setSuccessMessage(null)
       }, 5000)
-      setBlogs(blogs.concat(createdBlog))
+      console.log('createdBlog: ' , updatedBlogs)
+      setBlogs(updatedBlogs)
     } catch (exception) {
       setErrorMessage(exception.response.data.error)
       setTimeout(() => {
