@@ -134,10 +134,10 @@ const App = () => {
           />
           <LoginForm
             handleLogin={handleLogin}
-            username={username}
             handleUsernameChange={handleUsernameChange}
-            password={password}
             handlePasswordChange={handlePasswordChange}
+            username={username}
+            password={password}
           />
         </div>
       )}
@@ -153,7 +153,10 @@ const App = () => {
             {user.name} logged in<button onClick={handleLogout}>logout</button>
           </p>
 
-          <VisibilityToggler buttonLabel="create new blog" cancelButtonLabel="cancel">
+          <VisibilityToggler
+            buttonLabel="create new blog"
+            cancelButtonLabel="cancel"
+          >
             <NewBlogForm createBlog={addBlog} />
           </VisibilityToggler>
 
