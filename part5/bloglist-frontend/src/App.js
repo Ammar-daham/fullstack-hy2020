@@ -5,7 +5,7 @@ import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
-import Togglable from './components/Togglable'
+import VisibilityToggler from './components/VisibilityToggler'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -153,9 +153,9 @@ const App = () => {
             {user.name} logged in<button onClick={handleLogout}>logout</button>
           </p>
 
-          <Togglable buttonLabel="create new blog">
+          <VisibilityToggler buttonLabel="create new blog" cancelButtonLabel="cancel">
             <NewBlogForm createBlog={addBlog} />
-          </Togglable>
+          </VisibilityToggler>
 
           {blogs.map((blog) => (
             <Blog

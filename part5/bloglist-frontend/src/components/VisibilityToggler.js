@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Togglable = (props) => {
+const VisibilityToggler = ({children, buttonLabel, cancelButtonLabel}) => {
     const [visible, setVisible] = useState(false)
 
     const hideWhenVisible = { display: visible ? 'none' : ''}
@@ -13,14 +13,14 @@ const Togglable = (props) => {
     return (
         <div>
             <div style={hideWhenVisible}>
-                <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+                <button onClick={toggleVisibility}>{buttonLabel}</button>
             </div>
             <div style={showWhenVisible}>
-                {props.children}
-                <button onClick={toggleVisibility}>cancel</button>
+                {children}
+                <button onClick={toggleVisibility}>{cancelButtonLabel}</button>
             </div>
         </div>
     )
 }
 
-export default Togglable
+export default VisibilityToggler
