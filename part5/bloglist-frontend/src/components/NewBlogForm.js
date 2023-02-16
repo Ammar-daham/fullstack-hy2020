@@ -10,6 +10,7 @@ const NewBlog = ({ createBlog }) => {
       title: newBlog.title,
       author: newBlog.author,
       url: newBlog.url,
+      
     })
     setNewBlog({ title: '', author: '', url: '' })
   }

@@ -14,14 +14,17 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
+  const [count, setCount] = useState('')
+  const [updateTimestamp, setUpdateTimestamp] = useState(Date.now())
+
 
   console.log('blogs: ', blogs)
 
   console.log('user: ', user)
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [])
+    blogService.getAll().then(response => setBlogs(response))
+  }, [updateTimestamp])
 
   useEffect(() => {
     const LoggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -61,17 +64,37 @@ const App = () => {
   }
 
   const addBlog = async (blogObject) => {
+    let num
     try {
-      await blogService.creatNewBlog(blogObject)
+      const response = await blogService.createNewBlog(blogObject)
+      setUpdateTimestamp(Date.now())
       setSuccessMessage(
         `a new blog ${blogObject.title}! by ${blogObject.author} added`,
       )
-      const updatedBlogs = await blogService.getAll()
+      //const updatedBlogs = await blogService.getAll()
       setTimeout(() => {
         setSuccessMessage(null)
       }, 5000)
-      console.log('createdBlog: ' , updatedBlogs)
-      setBlogs(updatedBlogs)
+      console.log('createdBlog: ', response)
+      setBlogs(blogs.concat(response))
+    } catch (exception) {
+      setErrorMessage(exception.response.data.error)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const updatedBlog = async (updatedObject) => {
+    try {
+      await blogService.updateBlog(updatedObject)
+      setBlogs(
+        blogs.map((blog) =>
+          blog.id === updatedObject.id
+            ? { ...blog, likes: updatedObject.likes }
+            : blog,
+        ),
+      )
     } catch (exception) {
       setErrorMessage(exception.response.data.error)
       setTimeout(() => {
@@ -121,7 +144,7 @@ const App = () => {
           </Togglable>
 
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} updatedBlog={updatedBlog} />
           ))}
         </div>
       )}
