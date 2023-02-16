@@ -2,7 +2,7 @@ import { useState } from 'react'
 import blogService from '../services/blogs'
 import '../index.css'
 
-const Blog = ({ blog, updatedBlog }) => {
+const Blog = ({ blog, updatedBlog, deleteBlog, name }) => {
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : ''}
@@ -12,12 +12,18 @@ const Blog = ({ blog, updatedBlog }) => {
     setVisible(!visible)
   }
 
-  const handleUpdateLikes = async () => {
+  const handleUpdateLikes = () => {
     blog.likes++
-    await updatedBlog(blog)
-    console.log('Updated: ', blog)
+    updatedBlog(blog)
   }
 
+  const handleDelete = () => {
+    window.confirm(`Remove blog You're NOT gonna need it! by ${blog.author}`) 
+    ? deleteBlog(blog.id)
+    : console.log('not deleted')
+    
+  }
+  
   return (
     <div className="blogStyle">
       <div style={hideWhenVisible}>
@@ -33,6 +39,11 @@ const Blog = ({ blog, updatedBlog }) => {
         likes {blog.likes} <button onClick={handleUpdateLikes}>like</button>
         <br/>
         {blog.user.name}
+        <br />
+        {
+          blog.user.name === name &&
+          <button onClick={handleDelete}>remove</button>
+        }
       </div>
     </div>
   )

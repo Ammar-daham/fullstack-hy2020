@@ -16,7 +16,6 @@ const App = () => {
   const [successMessage, setSuccessMessage] = useState('')
   const [updateTimestamp, setUpdateTimestamp] = useState(Date.now())
 
-
   console.log('blogs: ', blogs)
 
   console.log('user: ', user)
@@ -96,7 +95,20 @@ const App = () => {
             : blog,
         ),
       )
-      console.log("sorted blogs: ", blogs);
+      console.log('sorted blogs: ', blogs)
+    } catch (exception) {
+      setErrorMessage(exception.response.data.error)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const deleteBlog = async (blogId) => {
+    try {
+      const res = await blogService.deleteBlog(blogId)
+      setUpdateTimestamp(Date.now())
+      console.log('res: ', res)
     } catch (exception) {
       setErrorMessage(exception.response.data.error)
       setTimeout(() => {
@@ -146,7 +158,13 @@ const App = () => {
           </Togglable>
 
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} updatedBlog={updatedBlog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              updatedBlog={updatedBlog}
+              deleteBlog={deleteBlog}
+              name={user.name}
+            />
           ))}
         </div>
       )}
