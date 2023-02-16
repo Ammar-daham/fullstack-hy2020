@@ -14,7 +14,6 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
-  const [count, setCount] = useState('')
   const [updateTimestamp, setUpdateTimestamp] = useState(Date.now())
 
 
@@ -23,7 +22,11 @@ const App = () => {
   console.log('user: ', user)
 
   useEffect(() => {
-    blogService.getAll().then(response => setBlogs(response))
+    const fetchAll = async () => {
+      const data = await blogService.getAll()
+      setBlogs(data.sort((a, b) => b.likes - a.likes))
+    }
+    fetchAll()
   }, [updateTimestamp])
 
   useEffect(() => {
@@ -64,14 +67,12 @@ const App = () => {
   }
 
   const addBlog = async (blogObject) => {
-    let num
     try {
       const response = await blogService.createNewBlog(blogObject)
       setUpdateTimestamp(Date.now())
       setSuccessMessage(
         `a new blog ${blogObject.title}! by ${blogObject.author} added`,
       )
-      //const updatedBlogs = await blogService.getAll()
       setTimeout(() => {
         setSuccessMessage(null)
       }, 5000)
@@ -95,6 +96,7 @@ const App = () => {
             : blog,
         ),
       )
+      console.log("sorted blogs: ", blogs);
     } catch (exception) {
       setErrorMessage(exception.response.data.error)
       setTimeout(() => {
