@@ -2,9 +2,13 @@ import '../index.css'
 import VisibilityToggler from './VisibilityToggler'
 
 const Blog = ({ blog, updatedBlog, deleteBlog, name }) => {
+  
   const handleUpdateLikes = () => {
-    blog.likes++
-    updatedBlog(blog)
+    const updatedBlogLikes = {
+      ...blog,
+      likes: blog.likes + 1
+    };
+    updatedBlog(updatedBlogLikes)
   }
 
   const handleDelete = () => {
@@ -17,7 +21,6 @@ const Blog = ({ blog, updatedBlog, deleteBlog, name }) => {
     <div className="blogStyle">
       {blog.title} {blog.author}
       <VisibilityToggler buttonLabel="view" cancelButtonLabel="hide">
-        <div>
           <a href="go to link">{blog.url}</a>
           <br />
           likes {blog.likes} <button onClick={handleUpdateLikes}>like</button>
@@ -27,7 +30,6 @@ const Blog = ({ blog, updatedBlog, deleteBlog, name }) => {
           {blog.user.name === name && (
             <button onClick={handleDelete}>remove</button>
           )}
-        </div>
       </VisibilityToggler>
     </div>
   )
