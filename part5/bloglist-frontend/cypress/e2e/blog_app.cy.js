@@ -48,6 +48,17 @@ describe('Blog app', function() {
       cy.get('#create-button').click()
       cy.contains('learn end to end testing')
     })
+
+    it('user can like a blog', function() {
+      cy.contains('create new blog').click()
+      cy.get('#title-input').type('learn end to end testing')
+      cy.get('#author-input').type('Ammar daham')
+      cy.get('#url-input').type('http://example.com')
+      cy.get('#create-button').click()
+      cy.contains('view').click()
+      cy.contains('like').click()
+      cy.contains('likes 1')
+    })
   })
 
 })
