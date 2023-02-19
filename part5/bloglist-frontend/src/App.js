@@ -150,7 +150,7 @@ const App = () => {
           />
 
           <p>
-            {user.name} logged in<button onClick={handleLogout}>logout</button>
+            {user.name} logged in<button id='logout-button' onClick={handleLogout}>logout</button>
           </p>
 
           <VisibilityToggler
@@ -167,7 +167,6 @@ const App = () => {
               updatedBlog={updatedBlog}
               deleteBlog={deleteBlog}
               name={user.name}
-              id='blog'
             />
           ))}
         </div>

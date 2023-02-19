@@ -1,4 +1,5 @@
 
+
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
@@ -32,7 +33,9 @@ describe('Blog app', function() {
     })
   })
 
+
   describe('When logged in', function() {
+   
     beforeEach(function() {
       cy.get('#username').type('amoor')
       cy.get('#password').type('salainen')
@@ -61,6 +64,22 @@ describe('Blog app', function() {
       cy.contains('view').click()
       cy.contains('remove').click()
       cy.contains('learn end to end testing Ammar Daham').should('not.exist')
+    })
+
+    it.only('user who did not create the blog does not see the remove button', function() {
+      cy.get('#create-button').click()
+      const user = {
+        name: 'root',
+        username: 'root',
+        password: 'rootroot'
+      }
+      cy.get('#logout-button').click()
+      cy.request('POST', 'http://localhost:3003/api/users/', user)
+      cy.get('#username').type('root')
+      cy.get('#password').type('rootroot')
+      cy.get('#login-button').click()
+      cy.contains('view').click()
+      cy.contains('remove').should('not.exist')
     })
   })
 
