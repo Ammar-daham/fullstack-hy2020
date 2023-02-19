@@ -167,6 +167,7 @@ const App = () => {
               updatedBlog={updatedBlog}
               deleteBlog={deleteBlog}
               name={user.name}
+              id='blog'
             />
           ))}
         </div>

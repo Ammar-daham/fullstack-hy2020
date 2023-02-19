@@ -28,7 +28,7 @@ describe('Blog app', function() {
       cy.get('#username').type('amoor')
       cy.get('#password').type('sala')
       cy.get('#login-button').click()
-      cy.contains('wrong username or password').should('have.css', 'color', 'rgb(255, 0, 0)')
+      cy.get('.error').contains('wrong username or password').should('have.css', 'color', 'rgb(255, 0, 0)')
     })
   })
 
@@ -38,26 +38,29 @@ describe('Blog app', function() {
       cy.get('#password').type('salainen')
       cy.get('#login-button').click()
       cy.contains('Ammar Daham logged in')
-    })
-
-    it('A blog can be created', function() {
       cy.contains('create new blog').click()
       cy.get('#title-input').type('learn end to end testing')
       cy.get('#author-input').type('Ammar daham')
       cy.get('#url-input').type('http://example.com')
+    })
+
+    it('A blog can be created', function() {
       cy.get('#create-button').click()
       cy.contains('learn end to end testing')
     })
 
     it('user can like a blog', function() {
-      cy.contains('create new blog').click()
-      cy.get('#title-input').type('learn end to end testing')
-      cy.get('#author-input').type('Ammar daham')
-      cy.get('#url-input').type('http://example.com')
       cy.get('#create-button').click()
       cy.contains('view').click()
       cy.contains('like').click()
       cy.contains('likes 1')
+    })
+
+    it('user can delete his own blog', function() {
+      cy.get('#create-button').click()
+      cy.contains('view').click()
+      cy.contains('remove').click()
+      cy.contains('learn end to end testing Ammar Daham').should('not.exist')
     })
   })
 
