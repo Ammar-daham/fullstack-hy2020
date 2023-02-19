@@ -26,6 +26,7 @@ const NewBlog = ({ createBlog }) => {
             value={newBlog.title}
             name="Title"
             data-testid="title-input"
+            id="title-input"
             onChange={({ target }) =>
               setNewBlog({ ...newBlog, title: target.value })
             }
@@ -38,6 +39,7 @@ const NewBlog = ({ createBlog }) => {
             value={newBlog.author}
             name="Author"
             data-testid="author-input"
+            id="author-input"
             onChange={({ target }) =>
               setNewBlog({ ...newBlog, author: target.value })
             }
@@ -50,12 +52,13 @@ const NewBlog = ({ createBlog }) => {
             value={newBlog.url}
             name="URL"
             data-testid="url-input"
+            id="url-input"
             onChange={({ target }) =>
               setNewBlog({ ...newBlog, url: target.value })
             }
           />
         </div>
-        <button type="submit">create</button>
+        <button type="submit" id='create-button'>create</button>
       </form>
     </div>
   )
