@@ -23,7 +23,7 @@ const Blog = ({ blog, updatedBlog, deleteBlog, name }) => {
       <VisibilityToggler buttonLabel="view" cancelButtonLabel="hide">
           <a href="go to link">{blog.url}</a>
           <br />
-          likes {blog.likes} <button onClick={handleUpdateLikes}>like</button>
+          likes {blog.likes} <button id='likes-button' onClick={handleUpdateLikes}>like</button>
           <br />
           {blog.user.name}
           <br />

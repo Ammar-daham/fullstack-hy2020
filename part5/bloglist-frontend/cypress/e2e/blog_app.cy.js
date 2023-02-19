@@ -66,7 +66,7 @@ describe('Blog app', function() {
       cy.contains('learn end to end testing Ammar Daham').should('not.exist')
     })
 
-    it.only('user who did not create the blog does not see the remove button', function() {
+    it('user who did not create the blog does not see the remove button', function() {
       cy.get('#create-button').click()
       const user = {
         name: 'root',
@@ -80,6 +80,25 @@ describe('Blog app', function() {
       cy.get('#login-button').click()
       cy.contains('view').click()
       cy.contains('remove').should('not.exist')
+    })
+
+    it.only('check the blogs are ordered according to likes', function() {
+      cy.get('#create-button').click()
+      cy.get('#title-input').type('learn jest testing')
+      cy.get('#author-input').type('Ammar daham')
+      cy.get('#url-input').type('http://example.com')
+      cy.get('#create-button').click()
+      
+      cy.get('.blogStyle').eq(1).contains('view').click()
+      cy.get('.blogStyle').eq(1).contains('like').click()
+      cy.get('.blogStyle').eq(1).contains('like').click()
+      cy.reload()
+      cy.get('.blogStyle').eq(0).should('contain', 'learn jest testing Ammar daham')
+      cy.get('.blogStyle').eq(1).should('contain', 'learn end to end testing Ammar daham')
+
+
+
+
     })
   })
 
