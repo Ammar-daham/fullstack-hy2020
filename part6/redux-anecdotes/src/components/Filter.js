@@ -7,7 +7,6 @@ const Filter = () => {
     const dispatch = useDispatch()
 
     const handleChange = (e) => {
-      console.log(e.target.value)
       dispatch(filter(e.target.value))
     }
     

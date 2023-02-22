@@ -1,13 +1,12 @@
+import { useSelector } from 'react-redux'
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 import Filter from './components/Filter'
 
 const App = () => {
+const anecdote = useSelector(state => state) 
 
- 
- 
-
-  
+  console.log('anecdotes: ',  anecdote)
 
   return (
     <div>
