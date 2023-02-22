@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { act } from "@testing-library/react"
 
 const anecdotesAtStart = [
   'If it hurts, do it more often',
@@ -48,46 +47,6 @@ const anecdoteSlice = createSlice({
     }
   }
 })
-
-// const anecdoteReducer = (state = initialState, action) => {
-//   console.log('state now: ', state)
-//   console.log('action', action)
-//   switch (action.type) {
-//     case 'VOTE':
-//       const id = action.payload.id
-//       const voteForAnecdote = state.find(a => a.id === id)
-//       const votedItem = {
-//         ...voteForAnecdote,
-//         votes: voteForAnecdote.votes + 1,
-//       }
-//       return state.map(anecdote =>
-//         anecdote.id !== id ? anecdote : votedItem,
-//       )
-//     case 'NEW_ANECDOTE':
-//       return [...state, action.payload]
-//     default:
-//       return state
-//   }
-// }
-
-// export const createAnecdote = (content) => {
-//   return {
-//     type: 'NEW_ANECDOTE',
-//     payload: {
-//       content,
-//       votes: 0,
-//       id: getId()
-//     }
-//   }
-// }
-
-// export const voteForAnecdote = (id) => {
-//   return {
-//     type: 'VOTE',
-//     payload: { id }
-//   }
-// }
-
 
 export const  { createAnecdote, voteForAnecdote} = anecdoteSlice.actions
 export default anecdoteSlice.reducer
