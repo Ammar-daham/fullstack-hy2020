@@ -86,13 +86,13 @@ const CreateNew = (props) => {
   const content = useField('text')
   const author = useField('text')
   const info = useField('text')
-  // const [content, setContent] = useState('')
-  // const [author, setAuthor] = useState('')
-  // const [info, setInfo] = useState('')
+
   const navigate = useNavigate()
 
   console.log('content: ', content.value)
   console.log('author: ', author.value)
+  console.log('info: ', info.value)
+
 
 
   const handleSubmit = (e) => {
@@ -105,6 +105,13 @@ const CreateNew = (props) => {
     })
     console.log('created')
     navigate('/')
+  }
+
+  const handleReset = (e) => {
+    e.preventDefault()
+      content.reset()
+      author.reset()
+      info.reset()
   }
 
   return (
@@ -138,7 +145,8 @@ const CreateNew = (props) => {
             onChange={info.onChange}
           />
         </div>
-        <button>create</button>
+        <button >create</button>
+        <button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
