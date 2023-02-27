@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom'
 
 const Menu = () => {
   const padding = {
@@ -35,7 +35,7 @@ const AnecdoteList = ({ anecdotes }) => (
   </div>
 )
 
-const Anecdote = ({anecdotes}) => {
+const Anecdote = ({ anecdotes }) => {
   const id = useParams().id
   const anecdote = anecdotes.find(a => a.id === Number(id))
   return (
@@ -85,6 +85,8 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
+  const navigate = useNavigate()
+
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -94,6 +96,7 @@ const CreateNew = (props) => {
       info,
       votes: 0,
     })
+    navigate('/')
   }
 
   return (
@@ -152,10 +155,13 @@ const App = () => {
 
   const [notification, setNotification] = useState('')
 
+  console.log('notification: ', notification)
+
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
-  }
+    setNotification(`a new anecdote ${anecdote.content} created`)
+  } 
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id)
 
@@ -170,20 +176,32 @@ const App = () => {
     setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)))
   }
 
+  setTimeout(() => {
+    setNotification('')
+  }, 5000)
+
+ 
+
   return (
     <Router>
       <div>
         <h1>Software anecdotes</h1>
         <Menu />
+        {
+          notification &&
+           <p>{notification}</p>
+        }
         <Routes>
+
           <Route path="/anecdotes/:id" element={<Anecdote anecdotes={anecdotes} />} />
           <Route
             path="/"
             element={<AnecdoteList anecdotes={anecdotes} />}
           />
           <Route path='/about' element={<About />} />
-          <Route path='create' element={<CreateNew addNew={addNew} />} />
+          <Route path='/create' element={<CreateNew addNew={addNew} />} />
         </Routes>
+
         <Footer />
       </div>
     </Router>
