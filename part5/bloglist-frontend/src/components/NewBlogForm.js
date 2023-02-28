@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 const NewBlog = ({ createBlog }) => {
 
@@ -10,7 +10,6 @@ const NewBlog = ({ createBlog }) => {
       title: newBlog.title,
       author: newBlog.author,
       url: newBlog.url,
-      
     })
     setNewBlog({ title: '', author: '', url: '' })
   }

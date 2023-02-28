@@ -67,9 +67,9 @@ describe('new blog', () => {
     console.log(createBlog.mock.calls[0][0])
     expect(createBlog.mock.calls).toHaveLength(1)
     expect(createBlog.mock.calls[0][0]).toEqual({
-        title: 'Test Title',
-        author: 'Test Author',
-        url: 'http://testurl.com'
+      title: 'Test Title',
+      author: 'Test Author',
+      url: 'http://testurl.com',
     })
     expect(createBlog.mock.calls[0][0].title).toBe('Test Title')
     expect(createBlog.mock.calls[0][0].author).toBe('Test Author')

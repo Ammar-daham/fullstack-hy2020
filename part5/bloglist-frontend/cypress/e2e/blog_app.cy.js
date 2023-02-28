@@ -1,5 +1,4 @@
 
-
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
@@ -17,7 +16,7 @@ describe('Blog app', function() {
   })
 
   describe('Login', function () {
-    
+
     it('succeeds with correct credentials', function() {
       cy.get('#username').type('amoor')
       cy.get('#password').type('salainen')
@@ -35,7 +34,7 @@ describe('Blog app', function() {
 
 
   describe('When logged in', function() {
-   
+
     beforeEach(function() {
       cy.get('#username').type('amoor')
       cy.get('#password').type('salainen')
@@ -88,17 +87,12 @@ describe('Blog app', function() {
       cy.get('#author-input').type('Ammar daham')
       cy.get('#url-input').type('http://example.com')
       cy.get('#create-button').click()
-      
       cy.get('.blogStyle').eq(1).contains('view').click()
       cy.get('.blogStyle').eq(1).contains('like').click()
       cy.get('.blogStyle').eq(1).contains('like').click()
       cy.reload()
       cy.get('.blogStyle').eq(0).should('contain', 'learn jest testing Ammar daham')
       cy.get('.blogStyle').eq(1).should('contain', 'learn end to end testing Ammar daham')
-
-
-
-
     })
   })
 

@@ -6,19 +6,23 @@ import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
 import VisibilityToggler from './components/VisibilityToggler'
+import { setSuccess, setError } from './redux/reducers/notificationReducer'
+import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState('')
-  const [successMessage, setSuccessMessage] = useState('')
   const [updateTimestamp, setUpdateTimestamp] = useState(Date.now())
 
   console.log('blogs: ', blogs)
 
   console.log('user: ', user)
+
+  const dispatch = useDispatch()
+
+  const notification = useSelector(state => state.notification)
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -50,10 +54,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('wrong username or password')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setError(exception.response.data.error, 10))
     }
   }
 
@@ -69,19 +70,11 @@ const App = () => {
     try {
       const response = await blogService.createNewBlog(blogObject)
       setUpdateTimestamp(Date.now())
-      setSuccessMessage(
-        `a new blog ${blogObject.title}! by ${blogObject.author} added`,
-      )
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
+      dispatch(setSuccess(`a new blog ${blogObject.title}! by ${blogObject.author} added`, 10))
       console.log('createdBlog: ', response)
       setBlogs(blogs.concat(response))
     } catch (exception) {
-      setErrorMessage(exception.response.data.error)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setError(exception.response.data.error, 10))
     }
   }
 
@@ -97,10 +90,7 @@ const App = () => {
       )
       console.log('sorted blogs: ', blogs)
     } catch (exception) {
-      setErrorMessage(exception.response.data.error)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setError(exception.response.data.error, 10))
     }
   }
 
@@ -110,10 +100,7 @@ const App = () => {
       setUpdateTimestamp(Date.now())
       console.log('res: ', res)
     } catch (exception) {
-      setErrorMessage(exception.response.data.error)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setError(exception.response.data.error, 10))
     }
   }
 
@@ -129,8 +116,8 @@ const App = () => {
         <div>
           <h2>log in to application</h2>
           <Notification
-            errorMessage={errorMessage}
-            successMessage={successMessage}
+            errorMessage={notification.error}
+            successMessage={notification.success}
           />
           <LoginForm
             handleLogin={handleLogin}
@@ -145,8 +132,8 @@ const App = () => {
         <div>
           <h2>blogs</h2>
           <Notification
-            errorMessage={errorMessage}
-            successMessage={successMessage}
+            errorMessage={notification.error}
+            successMessage={notification.success}
           />
 
           <p>
