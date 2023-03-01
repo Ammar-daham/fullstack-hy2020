@@ -19,7 +19,6 @@ const getAll = async () => {
 }
 
 const createNewBlog = async (newBlog) => {
-  console.log('token in create: ', token)
   const response = await axios.post(baseUrl, newBlog, config)
   return response.data
 }

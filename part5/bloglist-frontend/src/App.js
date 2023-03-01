@@ -6,30 +6,35 @@ import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
 import VisibilityToggler from './components/VisibilityToggler'
-import { setSuccess, setError } from './redux/reducers/notificationReducer'
+import { setSuccess, setError } from './redux/slices/notificationSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import { allBlogs, sortByLikes, createBlog } from './redux/slices/blogSlice'
+import { setToken } from './redux/slices/blogSlice'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  //const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [updateTimestamp, setUpdateTimestamp] = useState(Date.now())
 
-  console.log('blogs: ', blogs)
-
-  console.log('user: ', user)
-
   const dispatch = useDispatch()
 
-  const notification = useSelector(state => state.notification)
+  const notification = useSelector((state) => state.notification)
 
   useEffect(() => {
-    const fetchAll = async () => {
-      const data = await blogService.getAll()
-      setBlogs(data.sort((a, b) => b.likes - a.likes))
-    }
-    fetchAll()
+    dispatch(allBlogs())
+  }, [dispatch])
+
+  const blogs = useSelector((state) => state.blogs.blogsList)
+  console.log('blogs: ', blogs)
+
+  useEffect(() => {
+    //const data = await blogService.getAll()
+    //const data = dispatch(allBlogs())
+    //console.log('data: ', data)
+    //setBlogs(state.sort((a, b) => b.likes - a.likes))
+    dispatch(sortByLikes())
   }, [updateTimestamp])
 
   useEffect(() => {
@@ -37,7 +42,7 @@ const App = () => {
     if (LoggedUserJSON) {
       const user = JSON.parse(LoggedUserJSON)
       setUser(user)
-      blogService.setToken(user.token)
+      setToken(user.token)
     }
   }, [])
 
@@ -67,27 +72,30 @@ const App = () => {
   }
 
   const addBlog = async (blogObject) => {
-    try {
-      const response = await blogService.createNewBlog(blogObject)
-      setUpdateTimestamp(Date.now())
-      dispatch(setSuccess(`a new blog ${blogObject.title}! by ${blogObject.author} added`, 10))
-      console.log('createdBlog: ', response)
-      setBlogs(blogs.concat(response))
-    } catch (exception) {
-      dispatch(setError(exception.response.data.error, 10))
+    const response = await dispatch(createBlog(blogObject))
+    console.log('response: ', response)
+    if (response.type === 'blogs/newBlog/rejected') {
+      dispatch(setError(response.payload, 10))
+    } else {
+      dispatch(
+        setSuccess(
+          `a new blog ${blogObject.title}! by ${blogObject.author} added`,
+          10,
+        ),
+      )
     }
   }
 
   const updatedBlog = async (updatedObject) => {
     try {
       await blogService.updateBlog(updatedObject)
-      setBlogs(
-        blogs.map((blog) =>
-          blog.id === updatedObject.id
-            ? { ...blog, likes: updatedObject.likes }
-            : blog,
-        ),
-      )
+      // setBlogs(
+      //   blogs.map((blog) =>
+      //     blog.id === updatedObject.id
+      //       ? { ...blog, likes: updatedObject.likes }
+      //       : blog,
+      //   ),
+      // )
       console.log('sorted blogs: ', blogs)
     } catch (exception) {
       dispatch(setError(exception.response.data.error, 10))
@@ -137,7 +145,10 @@ const App = () => {
           />
 
           <p>
-            {user.name} logged in<button id='logout-button' onClick={handleLogout}>logout</button>
+            {user.name} logged in
+            <button id="logout-button" onClick={handleLogout}>
+              logout
+            </button>
           </p>
 
           <VisibilityToggler
