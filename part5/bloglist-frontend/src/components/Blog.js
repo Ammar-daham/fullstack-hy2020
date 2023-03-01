@@ -12,7 +12,7 @@ const Blog = ({ blog, updatedBlog, deleteBlog, name }) => {
 
   const handleDelete = () => {
     window.confirm(`Remove blog You're NOT gonna need it! by ${blog.author}`)
-      ? deleteBlog(blog.id)
+      ? deleteBlog(blog)
       : console.log('not deleted')
   }
 

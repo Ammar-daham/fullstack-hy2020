@@ -1,65 +1,64 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import blogService from './services/blogs'
-import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
 import VisibilityToggler from './components/VisibilityToggler'
 import { setSuccess, setError } from './redux/slices/notificationSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { allBlogs, sortByLikes, createBlog } from './redux/slices/blogSlice'
+import {
+  allBlogs,
+  sortByLikes,
+  createBlog,
+  removeBlog,
+  likeBlog,
+} from './redux/slices/blogSlice'
 import { setToken } from './redux/slices/blogSlice'
+import { login, resetUser, setUser } from './redux/slices/userSlice'
 
 const App = () => {
-  //const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
   const [updateTimestamp, setUpdateTimestamp] = useState(Date.now())
 
   const dispatch = useDispatch()
-
-  const notification = useSelector((state) => state.notification)
+  const state = useSelector((state) => state)
 
   useEffect(() => {
     dispatch(allBlogs())
-  }, [dispatch])
+  }, [updateTimestamp])
 
-  const blogs = useSelector((state) => state.blogs.blogsList)
-  console.log('blogs: ', blogs)
+  const notification = state.notifications
+  const blogs = state.blogs.blogsList
+  const user = state.users.user
 
   useEffect(() => {
-    //const data = await blogService.getAll()
-    //const data = dispatch(allBlogs())
-    //console.log('data: ', data)
-    //setBlogs(state.sort((a, b) => b.likes - a.likes))
     dispatch(sortByLikes())
-  }, [updateTimestamp])
+  }, [blogs])
 
   useEffect(() => {
     const LoggedUserJSON = window.localStorage.getItem('loggedUser')
     if (LoggedUserJSON) {
       const user = JSON.parse(LoggedUserJSON)
-      setUser(user)
+      dispatch(setUser(user))
       setToken(user.token)
     }
   }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    try {
-      const user = await loginService.login({
+    const user = await dispatch(
+      login({
         username,
         password,
-      })
-      window.localStorage.setItem('loggedUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-      dispatch(setError(exception.response.data.error, 10))
+      }),
+    )
+    window.localStorage.setItem('loggedUser', JSON.stringify(user.payload))
+    setToken(user.payload.token)
+    setUsername('')
+    setPassword('')
+    if (user.type === 'user/login/rejected') {
+      dispatch(setError(user.payload, 10))
     }
   }
 
@@ -73,7 +72,7 @@ const App = () => {
 
   const addBlog = async (blogObject) => {
     const response = await dispatch(createBlog(blogObject))
-    console.log('response: ', response)
+    setUpdateTimestamp(Date.now())
     if (response.type === 'blogs/newBlog/rejected') {
       dispatch(setError(response.payload, 10))
     } else {
@@ -87,40 +86,23 @@ const App = () => {
   }
 
   const updatedBlog = async (updatedObject) => {
-    try {
-      await blogService.updateBlog(updatedObject)
-      // setBlogs(
-      //   blogs.map((blog) =>
-      //     blog.id === updatedObject.id
-      //       ? { ...blog, likes: updatedObject.likes }
-      //       : blog,
-      //   ),
-      // )
-      console.log('sorted blogs: ', blogs)
-    } catch (exception) {
-      dispatch(setError(exception.response.data.error, 10))
-    }
+    await dispatch(likeBlog(updatedObject))
+    setUpdateTimestamp(Date.now())
   }
 
-  const deleteBlog = async (blogId) => {
-    try {
-      const res = await blogService.deleteBlog(blogId)
-      setUpdateTimestamp(Date.now())
-      console.log('res: ', res)
-    } catch (exception) {
-      dispatch(setError(exception.response.data.error, 10))
-    }
+  const deleteBlog = async (blog) => {
+    const response = await dispatch(removeBlog(blog))
+    console.log('delete: ', response)
   }
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedUser')
-    setUser(null)
-    console.log('logged out')
+    dispatch(resetUser())
   }
 
   return (
     <div>
-      {!user && (
+      {user === null && (
         <div>
           <h2>log in to application</h2>
           <Notification

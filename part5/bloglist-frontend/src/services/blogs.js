@@ -11,7 +11,6 @@ const setToken = (newToken) => {
   }
 }
 
-console.log('token before create: ', token)
 
 const getAll = async () => {
   const response = await axios.get(baseUrl)

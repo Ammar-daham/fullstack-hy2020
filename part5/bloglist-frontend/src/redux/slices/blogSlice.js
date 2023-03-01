@@ -29,7 +29,32 @@ export const createBlog = createAsyncThunk(
   async (blog, { rejectWithValue }) => {
     try {
       const response = await axios.post(url, blog, config)
-      console.log('data create: ', response.data)
+      return response.data
+    } catch (error) {
+      const errorMessage = error.response.data.error
+      return rejectWithValue(errorMessage)
+    }
+  },
+)
+
+export const removeBlog = createAsyncThunk(
+  'blogs/removeBlog',
+  async (blog, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(url + blog.id, config)
+      return response.data
+    } catch (error) {
+      const errorMessage = error.response.data.error
+      return rejectWithValue(errorMessage)
+    }
+  },
+)
+
+export const likeBlog = createAsyncThunk(
+  'blogs/likeBlog',
+  async (updatedBlog, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(url + updatedBlog.id, updatedBlog)
       return response.data
     } catch (error) {
       const errorMessage = error.response.data.error
@@ -74,7 +99,6 @@ export const blogSlice = createSlice({
       }
     })
     builder.addCase(createBlog.fulfilled, (state, action) => {
-      console.log('payload: ', action.payload)
       return {
         ...state,
         blogsList: [...state.blogsList, action.payload],
@@ -82,7 +106,42 @@ export const blogSlice = createSlice({
       }
     })
     builder.addCase(createBlog.rejected, (state, action) => {
-      console.log('payload: ', action)
+      return {
+        ...state,
+        success: '',
+        error: action.payload,
+      }
+    })
+    builder.addCase(removeBlog.pending, (state) => {
+      return {
+        ...state,
+        success: 'pending',
+      }
+    })
+    builder.addCase(removeBlog.fulfilled, (state, action) => {
+      const { id } = action.meta.arg
+      state.blogsList = state.blogsList.filter((blog) => blog.id !== id)
+      state.success = 'success'
+    })
+    builder.addCase(removeBlog.rejected, (state, action) => {
+      return {
+        ...state,
+        success: '',
+        error: action.payload,
+      }
+    })
+    builder.addCase(likeBlog.pending, (state) => {
+      return {
+        ...state,
+        success: 'pending',
+      }
+    })
+    builder.addCase(likeBlog.fulfilled, (state, action) => {
+      const { id } = action.meta.arg
+      state.blogsList = state.blogsList.map((blog) => blog.id === id ? action.payload : blog)
+      state.success = 'success'
+    })
+    builder.addCase(likeBlog.rejected, (state, action) => {
       return {
         ...state,
         success: '',
