@@ -1,19 +1,29 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
-const baseUrl = '/api/login'
+const loginUrl = '/api/login'
+const baseUrl = '/api/users'
 
 const initialState = {
   success: '',
   error: '',
   user: [],
+  usersList: []
 }
+
+export const fetchAll = createAsyncThunk(
+  'users/fetchAll',
+  async () => {
+    const response = await axios.get(baseUrl)
+    return response.data
+  }
+)
 
 export const login = createAsyncThunk(
   'user/login',
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axios.post(baseUrl, credentials)
+      const response = await axios.post(loginUrl, credentials)
       return response.data
     } catch (error) {
       const errorMessage = error.response.data.error
@@ -51,6 +61,22 @@ export const userSlice = createSlice({
       return {
         ...state,
         error: action.payload,
+      }
+    })
+    builder.addCase(fetchAll.pending, (state) => {
+      return {
+        ...state
+      }
+    })
+    builder.addCase(fetchAll.fulfilled, (state, action) => {
+      return {
+        ...state,
+        usersList: action.payload
+      }
+    })
+    builder.addCase(fetchAll.rejected, (state) => {
+      return {
+        ...state
       }
     })
   },
