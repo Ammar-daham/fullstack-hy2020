@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+import Blogs from './components/Blogs'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
@@ -17,6 +17,8 @@ import { setToken } from './redux/slices/blogSlice'
 import { fetchAll, login, resetUser, setUser } from './redux/slices/userSlice'
 import { Link, BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Users from './components/Users'
+import User from './components/User'
+import Blog from './components/Blog'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -37,6 +39,10 @@ const App = () => {
   const notification = state.notifications
   const blogs = state.blogs.blogsList
   const user = state.users.user
+
+  console.log('blogs: ', blogs)
+
+  console.log('user: ', user)
 
   useEffect(() => {
     dispatch(sortByLikes())
@@ -130,6 +136,7 @@ const App = () => {
             <div>
               <Link to="/blogs">Blogs</Link>
               <Link to="/users">Users</Link>
+              <Link to="/">login</Link>
             </div>
             <p>
               {user.name} logged in
@@ -139,31 +146,49 @@ const App = () => {
             </p>
 
             <Routes>
-              <Route path='/users' element={<Users users={users}/>}></Route>
+              <Route path="/users" element={<Users users={users} />}></Route>
+              <Route path="/users/:id" element={<User users={users} />}></Route>
+              <Route path="/"></Route>
+              <Route
+                path="/blogs"
+                element={
+                  <div>
+                    <h2>blogs</h2>
+                    <Notification
+                      errorMessage={notification.error}
+                      successMessage={notification.success}
+                    />
+
+                    <VisibilityToggler
+                      buttonLabel="create new blog"
+                      cancelButtonLabel="cancel"
+                    >
+                      <NewBlogForm createBlog={addBlog} />
+                    </VisibilityToggler>
+                    {blogs.map((blog) => (
+                      <Blogs
+                        key={blog.id}
+                        blog={blog}
+                        updatedBlog={updatedBlog}
+                        deleteBlog={deleteBlog}
+                        name={user.name}
+                      />
+                    ))}
+                  </div>
+                }
+              ></Route>
+              <Route
+                path="/blogs/:id"
+                element={
+                  <Blog
+                    blogs={blogs}
+                    updatedBlog={updatedBlog}
+                    deleteBlog={deleteBlog}
+                    name={user.name}
+                  />
+                }
+              ></Route>
             </Routes>
-            <h2>blogs</h2>
-            <Notification
-              errorMessage={notification.error}
-              successMessage={notification.success}
-            />
-
-
-            <VisibilityToggler
-              buttonLabel="create new blog"
-              cancelButtonLabel="cancel"
-            >
-              <NewBlogForm createBlog={addBlog} />
-            </VisibilityToggler>
-
-            {blogs.map((blog) => (
-              <Blog
-                key={blog.id}
-                blog={blog}
-                updatedBlog={updatedBlog}
-                deleteBlog={deleteBlog}
-                name={user.name}
-              />
-            ))}
           </div>
         </Router>
       )}

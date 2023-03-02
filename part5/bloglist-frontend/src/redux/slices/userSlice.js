@@ -7,7 +7,7 @@ const baseUrl = '/api/users'
 const initialState = {
   success: '',
   error: '',
-  user: [],
+  user: null,
   usersList: []
 }
 
@@ -48,6 +48,7 @@ export const userSlice = createSlice({
       return {
         ...state,
         success: 'pending',
+        user: null
       }
     })
     builder.addCase(login.fulfilled, (state, action) => {
@@ -60,6 +61,7 @@ export const userSlice = createSlice({
     builder.addCase(login.rejected, (state, action) => {
       return {
         ...state,
+        user: null,
         error: action.payload,
       }
     })

@@ -1,7 +1,8 @@
-import '../index.css'
-import VisibilityToggler from './VisibilityToggler'
+import { useParams } from 'react-router-dom'
 
-const Blog = ({ blog, updatedBlog, deleteBlog, name }) => {
+const Blog = ({ blogs, updatedBlog, deleteBlog, name }) => {
+  const id = useParams().id
+  const blog = blogs.find((blog) => blog.id === id)
   const handleUpdateLikes = () => {
     const updatedBlogLikes = {
       ...blog,
@@ -9,7 +10,6 @@ const Blog = ({ blog, updatedBlog, deleteBlog, name }) => {
     }
     updatedBlog(updatedBlogLikes)
   }
-
   const handleDelete = () => {
     window.confirm(`Remove blog You're NOT gonna need it! by ${blog.author}`)
       ? deleteBlog(blog)
@@ -17,22 +17,17 @@ const Blog = ({ blog, updatedBlog, deleteBlog, name }) => {
   }
 
   return (
-    <div className="blogStyle">
-      {blog.title} {blog.author}
-      <VisibilityToggler buttonLabel="view" cancelButtonLabel="hide">
-        <a href="go to link">{blog.url}</a>
-        <br />
-        likes {blog.likes}{' '}
-        <button id="likes-button" onClick={handleUpdateLikes}>
-          like
-        </button>
-        <br />
-        {blog.user.name}
-        <br />
-        {blog.user.name === name && (
-          <button onClick={handleDelete}>remove</button>
-        )}
-      </VisibilityToggler>
+    <div>
+      <h2>{blog.title}</h2>
+      <a href="got to link">{blog.url}</a>
+      <br />
+      {blog.likes} likes <button onClick={handleUpdateLikes}>Like</button>
+      <br />
+      added by {blog.user.name}
+      <br />
+      {blog.user.name === name && (
+        <button onClick={handleDelete}>remove</button>
+      )}
     </div>
   )
 }
