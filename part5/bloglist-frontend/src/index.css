@@ -38,3 +38,23 @@
   button:hover {
     background-color: rgb(10, 77, 111);
   }
+
+  .link {
+    text-decoration: none;
+    color: white;
+  }
+
+  .link:hover {
+    color: rgb(65, 145, 171);
+  }
+
+  .loggedIn{
+    color: white;
+    position: absolute;
+    top: 15px;
+    right: 10px;
+  }
+
+  p{
+    text-align: justify;
+  }

@@ -14,15 +14,20 @@ import {
   likeBlog,
 } from './redux/slices/blogSlice'
 import { setToken } from './redux/slices/blogSlice'
-import { fetchAll, login, resetUser, setUser } from './redux/slices/userSlice'
-import { Link, BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { fetchAll, login, setUser } from './redux/slices/userSlice'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from 'react-router-dom'
 import Users from './components/Users'
 import User from './components/User'
 import Blog from './components/Blog'
+import Navbar from './components/Navbar'
+import Home from './components/Home'
+import { Container } from 'react-bootstrap'
 
 const App = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [updateTimestamp, setUpdateTimestamp] = useState(Date.now())
 
   const dispatch = useDispatch()
@@ -57,29 +62,14 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    const user = await dispatch(
-      login({
-        username,
-        password,
-      }),
-    )
+  const handleLogin = async (obj) => {
+    const user = await dispatch(login(obj))
     window.localStorage.setItem('loggedUser', JSON.stringify(user.payload))
     setToken(user.payload.token)
-    setUsername('')
-    setPassword('')
     if (user.type === 'user/login/rejected') {
       dispatch(setError(user.payload, 10))
     }
-  }
-
-  const handleUsernameChange = ({ target }) => {
-    setUsername(target.value)
-  }
-
-  const handlePasswordChange = ({ target }) => {
-    setPassword(target.value)
+    return user.type
   }
 
   const addBlog = async (blogObject) => {
@@ -107,92 +97,59 @@ const App = () => {
     console.log('delete: ', response)
   }
 
-  const handleLogout = () => {
-    window.localStorage.removeItem('loggedUser')
-    dispatch(resetUser())
-  }
-
   return (
-    <div>
-      {user === null && (
+    <Container fluid="md">
+      <Router>
         <div>
-          <h2>log in to application</h2>
+          <Navbar user={user} />
+
           <Notification
             errorMessage={notification.error}
             successMessage={notification.success}
           />
-          <LoginForm
-            handleLogin={handleLogin}
-            handleUsernameChange={handleUsernameChange}
-            handlePasswordChange={handlePasswordChange}
-            username={username}
-            password={password}
-          />
+
+          <Routes>
+            <Route path="/" element={<Home />}></Route>
+            <Route
+              path="/login"
+              element={<LoginForm handleLogin={handleLogin} />}
+            ></Route>
+            <Route path="/users" element={<Users users={users} />}></Route>
+            <Route path="/users/:id" element={<User users={users} />}></Route>
+            <Route path="/"></Route>
+            <Route
+              path="/blogs"
+              element={
+                <div>
+                  <h2>blogs</h2>
+
+                  <VisibilityToggler
+                    buttonLabel="create new blog"
+                    cancelButtonLabel="cancel"
+                  >
+                    <NewBlogForm createBlog={addBlog} />
+                  </VisibilityToggler>
+                  {blogs.map((blog) => (
+                    <Blogs key={blog.id} blog={blog} />
+                  ))}
+                </div>
+              }
+            ></Route>
+            <Route
+              path="/blogs/:id"
+              element={
+                <Blog
+                  blogs={blogs}
+                  updatedBlog={updatedBlog}
+                  deleteBlog={deleteBlog}
+                  user={user}
+                />
+              }
+            ></Route>
+          </Routes>
         </div>
-      )}
-      {user && (
-        <Router>
-          <div>
-            <div>
-              <Link to="/blogs">Blogs</Link>
-              <Link to="/users">Users</Link>
-              <Link to="/">login</Link>
-            </div>
-            <p>
-              {user.name} logged in
-              <button id="logout-button" onClick={handleLogout}>
-                logout
-              </button>
-            </p>
-
-            <Routes>
-              <Route path="/users" element={<Users users={users} />}></Route>
-              <Route path="/users/:id" element={<User users={users} />}></Route>
-              <Route path="/"></Route>
-              <Route
-                path="/blogs"
-                element={
-                  <div>
-                    <h2>blogs</h2>
-                    <Notification
-                      errorMessage={notification.error}
-                      successMessage={notification.success}
-                    />
-
-                    <VisibilityToggler
-                      buttonLabel="create new blog"
-                      cancelButtonLabel="cancel"
-                    >
-                      <NewBlogForm createBlog={addBlog} />
-                    </VisibilityToggler>
-                    {blogs.map((blog) => (
-                      <Blogs
-                        key={blog.id}
-                        blog={blog}
-                        updatedBlog={updatedBlog}
-                        deleteBlog={deleteBlog}
-                        name={user.name}
-                      />
-                    ))}
-                  </div>
-                }
-              ></Route>
-              <Route
-                path="/blogs/:id"
-                element={
-                  <Blog
-                    blogs={blogs}
-                    updatedBlog={updatedBlog}
-                    deleteBlog={deleteBlog}
-                    name={user.name}
-                  />
-                }
-              ></Route>
-            </Routes>
-          </div>
-        </Router>
-      )}
-    </div>
+      </Router>
+    </Container>
   )
 }
 

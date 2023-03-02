@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 
-const Blog = ({ blogs, updatedBlog, deleteBlog, name }) => {
+const Blog = ({ blogs, updatedBlog, deleteBlog, user }) => {
   const id = useParams().id
   const blog = blogs.find((blog) => blog.id === id)
   const handleUpdateLikes = () => {
@@ -15,6 +15,9 @@ const Blog = ({ blogs, updatedBlog, deleteBlog, name }) => {
       ? deleteBlog(blog)
       : console.log('not deleted')
   }
+  if (!blog || !user) {
+    return null
+  }
 
   return (
     <div>
@@ -25,7 +28,7 @@ const Blog = ({ blogs, updatedBlog, deleteBlog, name }) => {
       <br />
       added by {blog.user.name}
       <br />
-      {blog.user.name === name && (
+      {blog.user.name === user.name && (
         <button onClick={handleDelete}>remove</button>
       )}
     </div>
