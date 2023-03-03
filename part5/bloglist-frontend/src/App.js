@@ -66,6 +66,7 @@ const App = () => {
     const user = await dispatch(login(obj))
     window.localStorage.setItem('loggedUser', JSON.stringify(user.payload))
     setToken(user.payload.token)
+    dispatch(allBlogs())
     if (user.type === 'user/login/rejected') {
       dispatch(setError(user.payload, 10))
     }

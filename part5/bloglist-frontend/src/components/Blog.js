@@ -31,6 +31,16 @@ const Blog = ({ blogs, updatedBlog, deleteBlog, user }) => {
       {blog.user.name === user.name && (
         <button onClick={handleDelete}>remove</button>
       )}
+      <br />
+      <h3>Comments</h3>
+      <ul>
+        {/* {blog.comments !== null
+          ? console.log('exist')
+          : console.log('not exist')} */}
+        {blog.comments.map((comment, index) => (
+          <li key={index}>{comment}</li>
+        ))}
+      </ul>
     </div>
   )
 }
