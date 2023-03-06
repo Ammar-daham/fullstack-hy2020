@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Container from 'react-bootstrap/Container'
+import Form from 'react-bootstrap/Form'
+import '../index.css'
 
 const LoginForm = ({ handleLogin }) => {
   const navigate = useNavigate()
@@ -21,7 +24,7 @@ const LoginForm = ({ handleLogin }) => {
       setUsername('')
       setPassword('')
       console.log('res ', res)
-      if(res === 'user/login/rejected') {
+      if (res === 'user/login/rejected') {
         navigate('/login')
       } else {
         navigate('/')
@@ -32,31 +35,34 @@ const LoginForm = ({ handleLogin }) => {
   }
 
   return (
-    <form onSubmit={onSubmit}>
-      <div>
-        username
-        <input
-          type="text"
-          id="username"
-          value={username}
-          name="Username"
-          onChange={handleUsernameChange}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          id="password"
-          value={password}
-          name="Password"
-          onChange={handlePasswordChange}
-        />
-      </div>
-      <button id="login-button" type="submit">
-        login
-      </button>
-    </form>
+    <Container className="login-container">
+      <Form onSubmit={onSubmit} className="login-form">
+        <h2>Login to the blog post App</h2>
+        <Form.Group className="mb-3" controlId="formBasicUsername">
+          <Form.Label>Username</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter username"
+            value={username}
+            name="Username"
+            onChange={handleUsernameChange}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Enter password"
+            value={password}
+            name="Password"
+            onChange={handlePasswordChange}
+          />
+        </Form.Group>
+        <button id="login-button" type="submit">
+          login
+        </button>
+      </Form>
+    </Container>
   )
 }
 

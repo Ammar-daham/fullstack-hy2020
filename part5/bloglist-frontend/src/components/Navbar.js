@@ -22,7 +22,7 @@ const Menu = ({ user }) => {
       expand="lg"
       bg="dark"
       variant="dark"
-      className="mb-3"
+      className="mb-4"
     >
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">

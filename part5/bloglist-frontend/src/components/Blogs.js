@@ -1,44 +1,27 @@
-import '../index.css'
-//import VisibilityToggler from './VisibilityToggler'
 import { Link } from 'react-router-dom'
+import Card from 'react-bootstrap/Card'
+import Col from 'react-bootstrap/Col'
+import '../index.css'
 
 const Blogs = ({ blog }) => {
-  // const handleUpdateLikes = () => {
-  //   const updatedBlogLikes = {
-  //     ...blog,
-  //     likes: blog.likes + 1,
-  //   }
-  //   updatedBlog(updatedBlogLikes)
-  // }
-
-  // const handleDelete = () => {
-  //   window.confirm(`Remove blog You're NOT gonna need it! by ${blog.author}`)
-  //     ? deleteBlog(blog)
-  //     : console.log('not deleted')
-  // }
   if (!blog) {
     return null
   }
   return (
-    <div>
-      <div className="blogStyle" key={blog.id}>
-        <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
-        {/* <VisibilityToggler buttonLabel="view" cancelButtonLabel="hide">
-          <a href="go to link">{blog.url}</a>
-          <br />
-          likes {blog.likes}{' '}
-          <button id="likes-button" onClick={handleUpdateLikes}>
-            like
+    <Col xs={12} md={3}>
+      <Card className="card" style={{ width: '18rem' }} key={blog.id}>
+        <Card.Img variant="top" src="holder.js/100px180" />
+        <Card.Body>
+          <Card.Title>{blog.Title}</Card.Title>
+          <Card.Text>{blog.author}</Card.Text>
+          <button>
+            <Link className="link" to={`/blogs/${blog.id}`}>
+              {blog.title} {blog.author}
+            </Link>
           </button>
-          <br />
-          {blog.user.name}
-          <br />
-          {blog.user.name === name && (
-            <button onClick={handleDelete}>remove</button>
-          )}
-        </VisibilityToggler> */}
-      </div>
-    </div>
+        </Card.Body>
+      </Card>
+    </Col>
   )
 }
 

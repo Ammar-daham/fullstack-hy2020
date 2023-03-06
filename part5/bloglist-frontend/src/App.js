@@ -12,21 +12,17 @@ import {
   createBlog,
   removeBlog,
   likeBlog,
-  addComment
+  addComment,
 } from './redux/slices/blogSlice'
 import { setToken } from './redux/slices/blogSlice'
-import { allUsers, login,  } from './redux/slices/userSlice'
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from 'react-router-dom'
+import { allUsers, login } from './redux/slices/userSlice'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Users from './components/Users'
 import User from './components/User'
 import Blog from './components/Blog'
 import Navbar from './components/Navbar'
 import Home from './components/Home'
-import { Container } from 'react-bootstrap'
+import Row from 'react-bootstrap/Row'
 
 const App = () => {
   const [updateTimestamp, setUpdateTimestamp] = useState(Date.now())
@@ -38,7 +34,6 @@ const App = () => {
   const notification = state.notifications
   const blogs = state.blogs.blogsList
   const user = state.users.user
-
 
   useEffect(() => {
     dispatch(allBlogs())
@@ -96,59 +91,59 @@ const App = () => {
   }
 
   return (
-    <Container fluid="md">
-      <Router>
-        <div>
-          <Navbar user={user} />
+    <Router>
+      <div>
+        <Navbar user={user} />
 
-          <Notification
-            errorMessage={notification.error}
-            successMessage={notification.success}
-          />
+        <Notification
+          errorMessage={notification.error}
+          successMessage={notification.success}
+        />
 
-          <Routes>
-            <Route path="/" element={<Home />}></Route>
-            <Route
-              path="/login"
-              element={<LoginForm handleLogin={handleLogin} />}
-            ></Route>
-            <Route path="/users" element={<Users users={users} />}></Route>
-            <Route path="/users/:id" element={<User users={users} />}></Route>
-            <Route path="/"></Route>
-            <Route
-              path="/blogs"
-              element={
-                <div>
-                  <h2>blogs</h2>
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route
+            path="/login"
+            element={<LoginForm handleLogin={handleLogin} />}
+          ></Route>
+          <Route path="/users" element={<Users users={users} />}></Route>
+          <Route path="/users/:id" element={<User users={users} />}></Route>
+          <Route path="/"></Route>
+          <Route
+            path="/blogs"
+            element={
+              <div>
+                <h2>blogs</h2>
 
-                  <VisibilityToggler
-                    buttonLabel="create new blog"
-                    cancelButtonLabel="cancel"
-                  >
-                    <NewBlogForm createBlog={addBlog} />
-                  </VisibilityToggler>
-                  {blogs.map((blog) => (
-                    <Blogs key={blog.id} blog={blog} />
-                  ))}
-                </div>
-              }
-            ></Route>
-            <Route
-              path="/blogs/:id"
-              element={
-                <Blog
-                  blogs={blogs}
-                  updatedBlog={updatedBlog}
-                  deleteBlog={deleteBlog}
-                  user={user}
-                  addComment={addComments}
-                />
-              }
-            ></Route>
-          </Routes>
-        </div>
-      </Router>
-    </Container>
+                <VisibilityToggler
+                  buttonLabel="create new blog"
+                  cancelButtonLabel="cancel"
+                >
+                  <NewBlogForm createBlog={addBlog} />
+                </VisibilityToggler>
+                {blogs.map((blog) => (
+                  <Row key={blog.id}>
+                    <Blogs  blog={blog} />
+                  </Row>
+                ))}
+              </div>
+            }
+          ></Route>
+          <Route
+            path="/blogs/:id"
+            element={
+              <Blog
+                blogs={blogs}
+                updatedBlog={updatedBlog}
+                deleteBlog={deleteBlog}
+                user={user}
+                addComment={addComments}
+              />
+            }
+          ></Route>
+        </Routes>
+      </div>
+    </Router>
   )
 }
 

@@ -1,60 +1,141 @@
+body {
+  font: 13px/20px "Lucida Grande", Tahoma, Verdana, sans-serif;
+  color: white;
+  margin: auto;
+  background-color: rgb(65, 145, 171);
+}
+
+
+.login-form {
+  position: relative;
+  margin: 30px auto;
+  padding: 20px 20px 20px;
+  width: 310px;
+  background: white;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 0 200px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 200px rgba(255, 255, 255, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.login-form h2 {
+  margin: -20px -20px 21px;
+  line-height: 40px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #555;
+  text-align: center;
+  text-shadow: 0 1px white;
+  background: #f3f3f3;
+  border-bottom: 1px solid #cfcfcf;
+  border-radius: 3px 3px 0 0;
+  background-image: -webkit-linear-gradient(top, whiteffd, #eef2f5);
+  background-image: -moz-linear-gradient(top, whiteffd, #eef2f5);
+  background-image: -o-linear-gradient(top, whiteffd, #eef2f5);
+  background-image: linear-gradient(to bottom, whiteffd, #eef2f5);
+  -webkit-box-shadow: 0 1px whitesmoke;
+  box-shadow: 0 1px whitesmoke;
+}
+
+
+input[type=text], input[type=password] {
+  margin: 5px;
+  padding: 0 10px;
+  width: 250px;
+  height: 34px;
+  color: #404040;
+  background: white;
+  border: 1px solid;
+  border-color: #c4c4c4 #d1d1d1 #d4d4d4;
+  border-radius: 2px;
+  outline: 5px solid #eff4f7;
+  -moz-outline-radius: 3px;
+  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  border-color: #7dc9e2;
+  outline-color: #dceefc;
+  outline-offset: 0;
+}
+
+#login-button {
+  padding: 0 18px;
+  height: 29px;
+  font-size: 12px;
+  font-weight: bold;
+  text-shadow: 0 1px #b2e0e0;
+  background-color: rgb(65, 145, 171);
+  border: 1px solid;
+  border-radius: 16px;
+  outline: 0;
+  box-shadow: inset 0 1px white, 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+#login-button:hover {
+  background-color: rgb(10, 77, 111);
+} 
 
 .success {
-    color: green;
-    background: lightgrey;
-    font-size: 20px;
-    border-style: solid;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
+  color: green;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
 
-  .error {
-    color: red;
-    background: lightgrey;
-    font-size: 20px;
-    border-style: solid;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
+.error {
+  color: red;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
 
-  .blogStyle {
-    padding: 10px;
-    padding-left: 2px,;
-    border-width: 1px;
-    margin-bottom: 5px;
-    margin-top: 5px;
-    border: 1px solid black;
-  }
 
-  button {
-    background-color: rgb(65, 145, 171);
-    color: white;
-    border-radius: 5px;
-    
-  }
+.blogStyle {
+  padding: 10px;
+  padding-left: 2px;
+  border-width: 1px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  border: 1px solid black;
+}
 
-  button:hover {
-    background-color: rgb(10, 77, 111);
-  }
+button {
+  background-color: rgb(65, 145, 171);
+  color: white;
+  border-radius: 5px;
+}
 
-  .link {
-    text-decoration: none;
-    color: white;
-  }
+button:hover {
+  background-color: rgb(10, 77, 111);
+}
 
-  .link:hover {
-    color: rgb(65, 145, 171);
-  }
+.link {
+  text-decoration: none;
+  color: white;
+}
 
-  .loggedIn{
-    color: white;
-    position: absolute;
-    top: 15px;
-    right: 10px;
-  }
+.link:hover {
+  color: rgb(65, 145, 171);
+}
 
-  p{
-    text-align: justify;
-  }
+.loggedIn {
+  color: white;
+  position: absolute;
+  top: 15px;
+  right: 10px;
+}
+
+p {
+  text-align: justify;
+}
+
+.card {
+  color: black;
+}
