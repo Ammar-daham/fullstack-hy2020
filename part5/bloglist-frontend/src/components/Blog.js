@@ -1,8 +1,13 @@
 import { useParams } from 'react-router-dom'
+import CommentForm from './CommentForm'
+import { useNavigate } from 'react-router-dom'
 
-const Blog = ({ blogs, updatedBlog, deleteBlog, user }) => {
+
+const Blog = ({ blogs, updatedBlog, deleteBlog, user, addComment }) => {
+  const navigate = useNavigate()
   const id = useParams().id
   const blog = blogs.find((blog) => blog.id === id)
+
   const handleUpdateLikes = () => {
     const updatedBlogLikes = {
       ...blog,
@@ -10,13 +15,24 @@ const Blog = ({ blogs, updatedBlog, deleteBlog, user }) => {
     }
     updatedBlog(updatedBlogLikes)
   }
+
   const handleDelete = () => {
-    window.confirm(`Remove blog You're NOT gonna need it! by ${blog.author}`)
-      ? deleteBlog(blog)
-      : console.log('not deleted')
+    if(window.confirm(`Remove blog You're NOT gonna need it! by ${blog.author}`)) {
+      deleteBlog(blog)
+      navigate('/blogs')
+    }
   }
   if (!blog || !user) {
     return null
+  }
+
+  const handleAddComment = (comment) => {
+    const updatedBlogComments = {
+      id: blog.id,
+      comment
+    }
+    console.log('commented blog: ', updatedBlogComments)
+    addComment(updatedBlogComments)
   }
 
   return (
@@ -34,13 +50,11 @@ const Blog = ({ blogs, updatedBlog, deleteBlog, user }) => {
       <br />
       <h3>Comments</h3>
       <ul>
-        {/* {blog.comments !== null
-          ? console.log('exist')
-          : console.log('not exist')} */}
         {blog.comments.map((comment, index) => (
           <li key={index}>{comment}</li>
         ))}
       </ul>
+      <CommentForm addComment={handleAddComment} />
     </div>
   )
 }

@@ -63,12 +63,30 @@ export const likeBlog = createAsyncThunk(
   },
 )
 
+export const addComment = createAsyncThunk(
+  'blogs/addComment',
+  async (updatedBlogComment, { rejectWithValue }) => {
+    try {
+      console.log(url + updatedBlogComment.id + '/comments')
+      const response = await axios.post(url + updatedBlogComment.id + '/comments', updatedBlogComment)
+      console.log('response in slice: ', updatedBlogComment, response.data)
+      return response.data
+    } catch (error) {
+      const errorMessage = error.response.data.error
+      return rejectWithValue(errorMessage)
+    }
+  },
+)
+
 export const blogSlice = createSlice({
   name: 'blogs',
   initialState,
   reducers: {
     sortByLikes: (state) => {
       state.blogsList.sort((a, b) => b.likes - a.likes)
+    },
+    resetBlogs: (state) => {
+      state.blogsList = []
     },
   },
 
@@ -148,8 +166,26 @@ export const blogSlice = createSlice({
         error: action.payload,
       }
     })
+    builder.addCase(addComment.pending, (state) => {
+      return {
+        ...state,
+        success: 'pending',
+      }
+    })
+    builder.addCase(addComment.fulfilled, (state, action) => {
+      const { id } = action.meta.arg
+      state.blogsList = state.blogsList.map((blog) => blog.id === id ? action.payload : blog)
+      state.success = 'success'
+    })
+    builder.addCase(addComment.rejected, (state, action) => {
+      return {
+        ...state,
+        success: '',
+        error: action.payload,
+      }
+    })
   },
 })
 
-export const { sortByLikes } = blogSlice.actions
+export const { sortByLikes, resetBlogs } = blogSlice.actions
 export default blogSlice.reducer

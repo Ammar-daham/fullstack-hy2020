@@ -2,6 +2,7 @@ import { Navbar, Nav } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { resetUser } from '../redux/slices/userSlice'
+import { resetBlogs } from '../redux/slices/blogSlice'
 import '../index.css'
 
 const Menu = ({ user }) => {
@@ -11,6 +12,7 @@ const Menu = ({ user }) => {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedUser')
     dispatch(resetUser())
+    dispatch(resetBlogs())
     navigate('/login')
   }
 

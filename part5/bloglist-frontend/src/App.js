@@ -12,9 +12,10 @@ import {
   createBlog,
   removeBlog,
   likeBlog,
+  addComment
 } from './redux/slices/blogSlice'
 import { setToken } from './redux/slices/blogSlice'
-import { fetchAll, login, setUser } from './redux/slices/userSlice'
+import { allUsers, login,  } from './redux/slices/userSlice'
 import {
   BrowserRouter as Router,
   Routes,
@@ -32,18 +33,18 @@ const App = () => {
 
   const dispatch = useDispatch()
   const state = useSelector((state) => state)
-  const users = useSelector((state) => state.users.usersList)
 
-  console.log('users: ', users)
-
-  useEffect(() => {
-    dispatch(allBlogs())
-    dispatch(fetchAll())
-  }, [updateTimestamp])
-
+  const users = state.users.usersList
   const notification = state.notifications
   const blogs = state.blogs.blogsList
   const user = state.users.user
+
+
+  useEffect(() => {
+    dispatch(allBlogs())
+  }, [updateTimestamp])
+
+  console.log('users: ', users)
 
   console.log('blogs: ', blogs)
 
@@ -53,20 +54,12 @@ const App = () => {
     dispatch(sortByLikes())
   }, [blogs])
 
-  useEffect(() => {
-    const LoggedUserJSON = window.localStorage.getItem('loggedUser')
-    if (LoggedUserJSON) {
-      const user = JSON.parse(LoggedUserJSON)
-      dispatch(setUser(user))
-      setToken(user.token)
-    }
-  }, [])
-
   const handleLogin = async (obj) => {
     const user = await dispatch(login(obj))
     window.localStorage.setItem('loggedUser', JSON.stringify(user.payload))
     setToken(user.payload.token)
     dispatch(allBlogs())
+    dispatch(allUsers())
     if (user.type === 'user/login/rejected') {
       dispatch(setError(user.payload, 10))
     }
@@ -94,8 +87,12 @@ const App = () => {
   }
 
   const deleteBlog = async (blog) => {
-    const response = await dispatch(removeBlog(blog))
-    console.log('delete: ', response)
+    await dispatch(removeBlog(blog))
+  }
+
+  const addComments = async (updatedBlogComments) => {
+    await dispatch(addComment(updatedBlogComments))
+    setUpdateTimestamp(Date.now())
   }
 
   return (
@@ -144,6 +141,7 @@ const App = () => {
                   updatedBlog={updatedBlog}
                   deleteBlog={deleteBlog}
                   user={user}
+                  addComment={addComments}
                 />
               }
             ></Route>

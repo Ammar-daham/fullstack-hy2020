@@ -11,7 +11,7 @@ const initialState = {
   usersList: []
 }
 
-export const fetchAll = createAsyncThunk(
+export const allUsers = createAsyncThunk(
   'users/fetchAll',
   async () => {
     const response = await axios.get(baseUrl)
@@ -37,7 +37,8 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     resetUser: (state) => {
-      state.user = null
+      state.user = null,
+      state.usersList = []
     },
     setUser: (state, action) => {
       state.user = action.payload
@@ -65,18 +66,18 @@ export const userSlice = createSlice({
         error: action.payload,
       }
     })
-    builder.addCase(fetchAll.pending, (state) => {
+    builder.addCase(allUsers.pending, (state) => {
       return {
         ...state
       }
     })
-    builder.addCase(fetchAll.fulfilled, (state, action) => {
+    builder.addCase(allUsers.fulfilled, (state, action) => {
       return {
         ...state,
         usersList: action.payload
       }
     })
-    builder.addCase(fetchAll.rejected, (state) => {
+    builder.addCase(allUsers.rejected, (state) => {
       return {
         ...state
       }
