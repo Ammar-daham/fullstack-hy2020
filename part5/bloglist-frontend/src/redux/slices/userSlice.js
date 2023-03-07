@@ -19,6 +19,19 @@ export const allUsers = createAsyncThunk(
   }
 )
 
+export const createUser = createAsyncThunk(
+  'users/newUser',
+  async (user, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(baseUrl, user)
+      return response.data
+    } catch (error) {
+      const errorMessage = error.response.data.error
+      return rejectWithValue(errorMessage)
+    }
+  },
+)
+
 export const login = createAsyncThunk(
   'user/login',
   async (credentials, { rejectWithValue }) => {
@@ -80,6 +93,26 @@ export const userSlice = createSlice({
     builder.addCase(allUsers.rejected, (state) => {
       return {
         ...state
+      }
+    })
+    builder.addCase(createUser.pending, (state) => {
+      return {
+        ...state,
+        success: 'pending',
+      }
+    })
+    builder.addCase(createUser.fulfilled, (state, action) => {
+      return {
+        ...state,
+        usersList: [...state.usersList, action.payload],
+        success: 'success',
+      }
+    })
+    builder.addCase(createUser.rejected, (state, action) => {
+      return {
+        ...state,
+        success: '',
+        error: action.payload,
       }
     })
   },

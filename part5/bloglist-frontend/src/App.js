@@ -12,7 +12,7 @@ import {
   addComment,
 } from './redux/slices/blogSlice'
 import { setToken } from './redux/slices/blogSlice'
-import { allUsers, login } from './redux/slices/userSlice'
+import { allUsers, login, createUser } from './redux/slices/userSlice'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Users from './components/Users'
 import User from './components/User'
@@ -22,6 +22,7 @@ import Home from './components/Home'
 import Container from 'react-bootstrap/Container'
 import BlogsTabs from './components/BlogsTabs'
 import SignupForm from './components/SignupForm'
+
 
 const App = () => {
   const [updateTimestamp, setUpdateTimestamp] = useState(Date.now())
@@ -89,6 +90,16 @@ const App = () => {
     setUpdateTimestamp(Date.now())
   }
 
+  const createNewUser = async (newUser) => {
+    const res = await dispatch(createUser(newUser))
+    console.log('new user: ', res)
+    if (res.type === 'user/login/rejected') {
+      dispatch(setError(user.payload, 10))
+    } else {
+      dispatch(setSuccess(`Thank you ${res.payload.name}, welcome to our blog post app!`, 10))
+    }
+  }
+
   return (
     <Router>
       <div>
@@ -101,7 +112,7 @@ const App = () => {
 
         <Routes>
           <Route path="/" element={<Home />}></Route>
-          <Route path="/sign-up" element={<SignupForm />}></Route>
+          <Route path="/sign-up" element={<SignupForm createUser={createNewUser}/>}></Route>
           <Route
             path="/login"
             element={<LoginForm handleLogin={handleLogin} />}
