@@ -12,19 +12,18 @@ const Users = ({ users }) => {
       <Row>
         {users.map((user) => {
           return (
-            <Col xs={12} md={3} key={user.id}>
-              <Card className='card' style={{ width: '15rem' }}>
+            <Col xs={12} sm={4} key={user.id}>
+              <Card className='card'>
                 <Card.Body>
-                  <Card.Title>Card Title</Card.Title>
-                  <Card.Text style={{ color: 'black' }}>
-                    User Name: {user.name}
-                  </Card.Text>
-                  <Card.Text style={{ color: 'black' }}>
+                  <Card.Title className='card-text'>
+                    {user.name.toUpperCase()}
+                  </Card.Title>
+                  <Card.Text className='card-text'>
                     Blogs Created: {user.blogs.length}
                   </Card.Text>
                   <button>
-                    <Link className="link" to={`/users/${user.id}`}>
-                      User
+                    <Link className="button-link" to={`/users/${user.id}`}>
+                      More info
                     </Link>
                   </button>
                 </Card.Body>

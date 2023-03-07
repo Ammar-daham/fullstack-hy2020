@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import '../index.css'
 
 const LoginForm = ({ handleLogin }) => {
@@ -58,9 +60,16 @@ const LoginForm = ({ handleLogin }) => {
             onChange={handlePasswordChange}
           />
         </Form.Group>
-        <button id="login-button" type="submit">
-          login
-        </button>
+        <Row>
+          <Col xs={8} sm={8}>
+            <Link to={'/sign-up'} className='link'>Sign up here</Link>
+          </Col>
+          <Col xs={4} sm={4}>
+            <button id="login-button" type="submit">
+              login
+            </button>
+          </Col>
+        </Row>
       </Form>
     </Container>
   )

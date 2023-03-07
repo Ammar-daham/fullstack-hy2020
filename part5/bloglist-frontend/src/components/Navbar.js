@@ -23,6 +23,7 @@ const Menu = ({ user }) => {
       bg="dark"
       variant="dark"
       className="mb-4"
+      style={{ padding: '10px' }}
     >
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
@@ -36,6 +37,11 @@ const Menu = ({ user }) => {
             <Nav.Link href="#" as="span">
               <Link to="/login" className="link">
                 LOGIN
+              </Link>
+            </Nav.Link>
+            <Nav.Link href="#" as="span">
+              <Link to="/sign-up" className="link">
+                SIGN UP
               </Link>
             </Nav.Link>
           </Nav>

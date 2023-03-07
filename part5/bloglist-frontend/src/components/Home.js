@@ -4,7 +4,7 @@ import '../index.css'
 
 const Home = () => {
   return (
-    <Container fluid="md">
+    <Container fluid="md" style={{ padding: '30px' }}>
       <h2>Blog App</h2>
       <p>
         A blog app is a software application that enables users to create,

@@ -1,27 +1,35 @@
 import { Link } from 'react-router-dom'
 import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
+
 import '../index.css'
 
-const Blogs = ({ blog }) => {
-  if (!blog) {
+const Blogs = ({ blogs }) => {
+  if (!blogs) {
     return null
   }
   return (
-    <Col xs={12} md={3}>
-      <Card className="card" style={{ width: '18rem' }} key={blog.id}>
-        <Card.Img variant="top" src="holder.js/100px180" />
-        <Card.Body>
-          <Card.Title>{blog.Title}</Card.Title>
-          <Card.Text>{blog.author}</Card.Text>
-          <button>
-            <Link className="link" to={`/blogs/${blog.id}`}>
-              {blog.title} {blog.author}
-            </Link>
-          </button>
-        </Card.Body>
-      </Card>
-    </Col>
+    <Row>
+      {blogs.map((blog) => {
+        return (
+          <Col xs={12} key={blog.id}>
+            <Card className="item">
+              <Link className="item_link" to={`/blogs/${blog.id}`}>
+                <div className="item_bg"></div>
+                <Card.Title className="item_title">{blog.title.toUpperCase()}</Card.Title>
+                <Card.Text className="item-text">By {blog.author}</Card.Text>
+                <Card.Text className="item-text">
+                  <a className="link" href={blog.url}>
+                    Read more
+                  </a>
+                </Card.Text>
+              </Link>
+            </Card>
+          </Col>
+        )
+      })}
+    </Row>
   )
 }
 

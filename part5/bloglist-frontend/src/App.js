@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react'
-import Blogs from './components/Blogs'
 import LoginForm from './components/LoginForm'
-import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
-import VisibilityToggler from './components/VisibilityToggler'
 import { setSuccess, setError } from './redux/slices/notificationSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -22,7 +19,9 @@ import User from './components/User'
 import Blog from './components/Blog'
 import Navbar from './components/Navbar'
 import Home from './components/Home'
-import Row from 'react-bootstrap/Row'
+import Container from 'react-bootstrap/Container'
+import BlogsTabs from './components/BlogsTabs'
+import SignupForm from './components/SignupForm'
 
 const App = () => {
   const [updateTimestamp, setUpdateTimestamp] = useState(Date.now())
@@ -102,31 +101,30 @@ const App = () => {
 
         <Routes>
           <Route path="/" element={<Home />}></Route>
+          <Route path="/sign-up" element={<SignupForm />}></Route>
           <Route
             path="/login"
             element={<LoginForm handleLogin={handleLogin} />}
           ></Route>
           <Route path="/users" element={<Users users={users} />}></Route>
           <Route path="/users/:id" element={<User users={users} />}></Route>
-          <Route path="/"></Route>
+          {/* <Route
+            path="/blogs/create-new-blog"
+            element={
+              <VisibilityToggler
+                buttonLabel="create new blog"
+                cancelButtonLabel="cancel"
+              >
+                <NewBlogForm createBlog={addBlog} />
+              </VisibilityToggler>
+            }
+          ></Route> */}
           <Route
             path="/blogs"
             element={
-              <div>
-                <h2>blogs</h2>
-
-                <VisibilityToggler
-                  buttonLabel="create new blog"
-                  cancelButtonLabel="cancel"
-                >
-                  <NewBlogForm createBlog={addBlog} />
-                </VisibilityToggler>
-                {blogs.map((blog) => (
-                  <Row key={blog.id}>
-                    <Blogs  blog={blog} />
-                  </Row>
-                ))}
-              </div>
+              <Container>
+                <BlogsTabs blogs={blogs} createBlog={addBlog} />
+              </Container>
             }
           ></Route>
           <Route

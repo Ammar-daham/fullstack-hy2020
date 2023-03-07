@@ -1,7 +1,14 @@
 import { useState } from 'react'
+import Form from 'react-bootstrap/Form'
+import FloatingLabel from 'react-bootstrap/FloatingLabel'
+import { Container } from 'react-bootstrap'
+//import Row from 'react-bootstrap/Row'
+//import Col from 'react-bootstrap/Col'
+
+import '../index.css'
+
 
 const NewBlog = ({ createBlog }) => {
-
   const [newBlog, setNewBlog] = useState({ title: '', author: '', url: '' })
 
   const addNewBlog = (event) => {
@@ -15,51 +22,57 @@ const NewBlog = ({ createBlog }) => {
   }
 
   return (
-    <div>
+    <Container className='newBlog-Form'>
       <h2>create new blog post</h2>
-      <form onSubmit={addNewBlog}>
-        <div>
-          title:
-          <input
+      <Form onSubmit={addNewBlog}>
+        <Form.Group className="mb-3" controlId="formBasicTitle">
+          <Form.Label>Title</Form.Label>
+          <Form.Control
             type="text"
             value={newBlog.title}
-            name="Title"
-            data-testid="title-input"
-            id="title-input"
             onChange={({ target }) =>
               setNewBlog({ ...newBlog, title: target.value })
             }
           />
-        </div>
-        <div>
-          author:
-          <input
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicAuthor">
+          <Form.Label>Author</Form.Label>
+          <Form.Control
             type="text"
             value={newBlog.author}
-            name="Author"
-            data-testid="author-input"
-            id="author-input"
             onChange={({ target }) =>
               setNewBlog({ ...newBlog, author: target.value })
             }
           />
-        </div>
-        <div>
-          url:
-          <input
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicUrl">
+          <Form.Label>Url</Form.Label>
+          <Form.Control
             type="text"
             value={newBlog.url}
-            name="URL"
-            data-testid="url-input"
-            id="url-input"
             onChange={({ target }) =>
               setNewBlog({ ...newBlog, url: target.value })
             }
           />
-        </div>
-        <button type="submit" id='create-button'>create</button>
-      </form>
-    </div>
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicAuthor">
+          <Form.Label>Description</Form.Label>
+          <FloatingLabel controlId="floatingTextarea2" label="Comments">
+            <Form.Control
+              as="textarea"
+              placeholder="Leave a comment here"
+              style={{ height: '100px' }}
+            />
+          </FloatingLabel>
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicAuthor">
+        </Form.Group>
+        <button type="submit" id="create-button">
+          create
+        </button>
+      </Form>
+    </Container>
   )
 }
 
